@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtAuthenticationFailureHandler authenticationFailureHandler;
 
     private static List<String> skipFilterUrls = Arrays.asList(
-            "/login/**");
+            "/api/v1/auth/**");
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

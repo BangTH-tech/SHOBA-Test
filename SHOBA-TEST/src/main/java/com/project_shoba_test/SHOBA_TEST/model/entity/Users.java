@@ -1,7 +1,11 @@
 package com.project_shoba_test.SHOBA_TEST.model.entity;
 
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,5 +36,7 @@ public class Users {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 }

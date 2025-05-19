@@ -29,52 +29,54 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-        private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-        private final String[] guestUrl = {
-                        "/login/**"
-        };
+    private final String[] publicUrls = {
+            "/api/v1/auth/**"
+    };
 
+    private final String[] guestUrl = {
+            "/login/**"
+    };
 
-        private final JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
 
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .cors(Customizer.withDefaults())
+                .csrf(customizer -> customizer.disable())
+                .authorizeHttpRequests(
+                        request -> request
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/api/v1/admin/**")
+                                .hasAuthority(UserRole.ADMIN.toString())
+                                .requestMatchers(publicUrls).permitAll()
+                                .anyRequest()
+                                .authenticated())
+                .authenticationProvider(authenticationProvider())
+                .exceptionHandling(
+                        exception -> exception
+                                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                                .authenticationEntryPoint(
+                                        new CustomAuthenticationEntryPoint()))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
 
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-                return httpSecurity
-                                .cors(Customizer.withDefaults())
-                                .csrf(customizer -> customizer.disable())
-                                .authorizeHttpRequests(
-                                                request -> request
-                                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                                                .requestMatchers("/api/v1/admin/**")
-                                                                .hasAuthority(UserRole.ADMIN.toString())
-                                                                .anyRequest()
-                                                                .authenticated())
-                                .authenticationProvider(authenticationProvider())
-                                .exceptionHandling(
-                                                exception -> exception
-                                                                .accessDeniedHandler(new CustomAccessDeniedHandler())
-                                                                .authenticationEntryPoint(
-                                                                                new CustomAuthenticationEntryPoint(
-                                                                                                )))
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                                .build();
+    }
 
-        }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(10));
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
 
-        @Bean
-        public AuthenticationProvider authenticationProvider() {
-                DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-                provider.setPasswordEncoder(new BCryptPasswordEncoder(10));
-                provider.setUserDetailsService(userDetailsService);
-                return provider;
-        }
-
-        @Bean
-        public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-                return configuration.getAuthenticationManager();
-        }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 }

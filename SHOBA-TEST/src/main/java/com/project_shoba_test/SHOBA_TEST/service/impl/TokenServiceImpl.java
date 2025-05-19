@@ -34,12 +34,6 @@ public class TokenServiceImpl implements TokenService {
     @Value("${spring.jwt.access-token.expiry-time}")
     private int accessTokenExpiryTime;
 
-    @Value("${spring.jwt.refresh-token.expiry-time}")
-    private int refreshTokenExpiryTime;
-
-    @Value("${spring.jwt.forgot-token.expiry-time}")
-    private int forgotTokenExpiryTime;
-
     private final UserRepository userRepository;
 
     @Override
@@ -102,7 +96,6 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void addTokenToCookie(String token, HttpServletResponse response) {
-        String cookieName = "";
         int expiryTime = accessTokenExpiryTime;
         
         ResponseCookie tokenCookie = ResponseCookie.from("access_token", token)
