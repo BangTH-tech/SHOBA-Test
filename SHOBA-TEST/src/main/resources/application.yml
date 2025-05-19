@@ -1,0 +1,58 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 300
+      min-spare: 20
+    max-connections: 8192
+    accept-count: 1000
+    connection-timeout: 2000
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 1024
+spring:
+  mvc:
+    converters:
+      preferred-json-mapper: jackson
+  datasource:
+    url: jdbc:mysql://localhost:3306/shoba_test?useSSL=false&serverTimezone=UTC
+    username: root
+    password: haibang20042003
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect 
+  sql:
+    init:
+      mode: always
+  application:
+    name: Kodeholik
+    url: ${APPLICATION_URL_BASE:http://localhost:8080}
+    fe-url: http://localhost:5174
+    admin-fe-url: http://localhost:5173
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
+  jwt:
+    secret-key: d2f21asdabkocxz213123ADSAKDOACZXCMZKADKASODKWOEMKQMKCMAKDMASKDAKDMAKDASM
+    access-token:
+      expiry-time: 15000000
+        #15000 #seconds
+    refresh-token:
+      expiry-time: 
+        86400000 #seconds
+    forgot-token:
+      fe-link: 
+        http://localhost:5174/reset?token=
+      expiry-time: 
+        900000
