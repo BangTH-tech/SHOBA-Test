@@ -11,7 +11,9 @@ import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
 import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
