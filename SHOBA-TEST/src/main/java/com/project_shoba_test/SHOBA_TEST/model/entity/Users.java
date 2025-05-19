@@ -1,6 +1,7 @@
 package com.project_shoba_test.SHOBA_TEST.model.entity;
 
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
@@ -38,5 +39,8 @@ public class Users {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
 }

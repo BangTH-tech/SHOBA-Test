@@ -11,6 +11,7 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.request.LoginDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.RegisterDto;
 import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
 import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
 import com.project_shoba_test.SHOBA_TEST.service.AuthService;
 import com.project_shoba_test.SHOBA_TEST.service.RecaptchaVerifierService;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.project_shoba_test.SHOBA_TEST.exception.BadRequestException;
 import com.project_shoba_test.SHOBA_TEST.exception.NotFoundException;
+import com.project_shoba_test.SHOBA_TEST.exception.UnauthorizedException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -58,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
         Users user = registerMapper.mapFrom(registerDto);
         user.setRole(UserRole.GUEST);
+        user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);
     }
 
@@ -73,10 +76,15 @@ public class AuthServiceImpl implements AuthService {
         if(verifyCaptchaToken(loginDto.getRecaptchaToken()) == false) {
             throw new BadRequestException("Captcha verification failed", "Captcha verification failed");
         }
+        
         String username = loginDto.getUsername();
 
         Users user = userRepository.existsByUsernameOrEmail(username)
                 .orElseThrow(() -> new NotFoundException("User not found", "User not found"));
+        
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new UnauthorizedException("User is inactive", "User is inactive");
+        }
 
         String accessToken = tokenService.generateAccessToken(user.getUsername());
         tokenService.addTokenToCookie(accessToken, response);

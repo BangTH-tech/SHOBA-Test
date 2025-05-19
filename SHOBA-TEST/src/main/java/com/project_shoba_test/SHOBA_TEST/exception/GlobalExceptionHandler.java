@@ -34,6 +34,14 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        return new ResponseEntity(new ErrorResponse(ex.getMessage(), ex.getMessage()),
+                HttpStatus.UNAUTHORIZED);
+    }
+
     // handle request param bi sai dinh dang
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -80,5 +88,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         return new ResponseEntity(new ErrorResponse(ex.getMessage(), ex.getMessage()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ResponseEntity<ErrorResponse> handleForbiddenException(ForbiddenException ex) {
+        return new ResponseEntity(new ErrorResponse(ex.getMessage(), ex.getMessage()),
+                HttpStatus.FORBIDDEN);
     }
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,7 +19,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project_shoba_test.SHOBA_TEST.exception.ForbiddenException;
 import com.project_shoba_test.SHOBA_TEST.handler.JwtAuthenticationFailureHandler;
+import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
 import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
 import com.project_shoba_test.SHOBA_TEST.service.TokenService;
 
@@ -31,15 +37,13 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Component
+@Order(1)
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-
     private final UserDetailsService userDetailsService;
-
     private final UserRepository userRepository;
-
     private final JwtAuthenticationFailureHandler authenticationFailureHandler;
 
     private static List<String> skipFilterUrls = Arrays.asList(
@@ -65,10 +69,10 @@ public class JwtFilter extends OncePerRequestFilter {
             if ((username != null && !username.equals("")) &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                log.info(username);
                 if (userRepository.existsByUsernameOrEmail(username).isPresent()
                         && tokenService.validateToken(accessToken)) {
-                    log.info("User is authenticated: " + username);
+                    Users user = userRepository.existsByUsernameOrEmail(username).get();
+          
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -116,7 +120,8 @@ public class JwtFilter extends OncePerRequestFilter {
                         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                         if (userRepository.existsByUsernameOrEmail(username).isPresent()
                                 && tokenService.validateToken(accessToken)) {
-
+                            Users user = userRepository.existsByUsernameOrEmail(username).get();
+       
                             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities());
                             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -133,4 +138,3 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
 }
-

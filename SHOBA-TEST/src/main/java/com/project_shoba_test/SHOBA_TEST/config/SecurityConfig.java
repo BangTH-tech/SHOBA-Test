@@ -17,10 +17,14 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.project_shoba_test.SHOBA_TEST.filter.InactiveCheckFilter;
 import com.project_shoba_test.SHOBA_TEST.filter.JwtFilter;
 import com.project_shoba_test.SHOBA_TEST.handler.CustomAccessDeniedHandler;
 import com.project_shoba_test.SHOBA_TEST.handler.CustomAuthenticationEntryPoint;
+import com.project_shoba_test.SHOBA_TEST.handler.JwtAuthenticationFailureHandler;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
+import com.project_shoba_test.SHOBA_TEST.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +33,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final TokenService tokenService;
+
     private final UserDetailsService userDetailsService;
+
+    private final UserRepository userRepository;
 
     private final String[] publicUrls = {
             "/api/v1/auth/**"
@@ -40,6 +48,8 @@ public class SecurityConfig {
     };
 
     private final JwtFilter jwtFilter;
+
+    private final InactiveCheckFilter inactiveCheckFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -63,6 +73,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(inactiveCheckFilter, JwtFilter.class)
                 .build();
 
     }
@@ -79,4 +90,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
+
+
 }

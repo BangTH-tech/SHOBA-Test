@@ -34,7 +34,6 @@ public class TokenServiceImpl implements TokenService {
     @Value("${spring.jwt.access-token.expiry-time}")
     private int accessTokenExpiryTime;
 
-    private final UserRepository userRepository;
 
     @Override
     public String generateAccessToken(String username) {
