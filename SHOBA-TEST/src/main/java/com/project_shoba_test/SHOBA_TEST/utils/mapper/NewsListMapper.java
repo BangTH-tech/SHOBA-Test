@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.NewListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.entity.News;
+import com.project_shoba_test.SHOBA_TEST.service.NewCategoryService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,9 +15,14 @@ public class NewsListMapper implements Mapper<NewListResponse, News> {
 
     private final ModelMapper mapper;
 
+
     @Override
     public NewListResponse mapTo(News b) {
-        return mapper.map(b, NewListResponse.class);
+        NewListResponse newListResponse = mapper.map(b, NewListResponse.class);
+        newListResponse.setCategoryName(b.getCategory().getName());
+        newListResponse.setAuthorUsername(b.getCreatedBy().getUsername());
+        newListResponse.setAuthorEmail(b.getCreatedBy().getEmail());
+        return newListResponse;
     }
 
     @Override

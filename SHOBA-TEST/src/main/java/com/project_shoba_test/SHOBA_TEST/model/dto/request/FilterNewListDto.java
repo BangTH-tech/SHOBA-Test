@@ -22,4 +22,6 @@ public class FilterNewListDto {
     private boolean ascending;
 
     private String search;
+
+    private Long categoryId;
 }
