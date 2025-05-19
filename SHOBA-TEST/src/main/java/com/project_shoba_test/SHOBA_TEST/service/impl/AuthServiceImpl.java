@@ -4,6 +4,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -95,4 +97,23 @@ public class AuthServiceImpl implements AuthService {
         return true; 
     }
 
+    @Override
+    public Users getCurrentUser() {
+        UserDetails currenUserDetails = getCurrentUserDetails();
+        if (currenUserDetails != null) {
+            return userRepository.existsByUsernameOrEmail(currenUserDetails.getUsername())
+                    .orElseThrow(() -> new NotFoundException("User not found", "User not found"));
+        }
+        return null;
+    }
+
+    public UserDetails getCurrentUserDetails() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal != null && principal instanceof UserDetails userDetails) {
+                return userDetails;
+            }
+        }
+        return null;
+    }
 }
