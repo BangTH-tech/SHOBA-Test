@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
+import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
 
 public interface UserRepository extends JpaRepository<Users, Long> {
     @Query("SELECT u FROM Users u WHERE u.username = :text OR u.email = :text")
@@ -19,10 +20,11 @@ public interface UserRepository extends JpaRepository<Users, Long> {
                 "((LOWER(u.username) LIKE '%' || LOWER(cast(:search as text)) || '%') OR " +
                 "(LOWER(u.email) LIKE '%' || LOWER(cast(:search as text)) || '%') OR " +
                 "(LOWER(u.fullName) LIKE '%' || LOWER(cast(:search as text)) || '%'))) " +
-                "AND (COALESCE(:role, u.role) = u.role) ")
+                "AND (COALESCE(:role, u.role) = u.role) AND (COALESCE(:status, u.status) = u.status)")
     public Page<Users> getEmployeeList(
         @Param("search") String search,
         @Param("role") UserRole role,
+        @Param("status") UserStatus status,
         Pageable pageable
     );
 }

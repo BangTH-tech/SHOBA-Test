@@ -24,7 +24,7 @@ import com.project_shoba_test.SHOBA_TEST.handler.CustomAuthenticationEntryPoint;
 import com.project_shoba_test.SHOBA_TEST.handler.JwtAuthenticationFailureHandler;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
 import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
-import com.project_shoba_test.SHOBA_TEST.service.TokenService;
+import com.project_shoba_test.SHOBA_TEST.service.token.TokenService;
 
 import lombok.RequiredArgsConstructor;
 

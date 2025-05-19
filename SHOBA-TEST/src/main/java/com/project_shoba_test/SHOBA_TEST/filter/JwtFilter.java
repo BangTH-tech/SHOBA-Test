@@ -25,7 +25,7 @@ import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
 import com.project_shoba_test.SHOBA_TEST.repository.UserRepository;
-import com.project_shoba_test.SHOBA_TEST.service.TokenService;
+import com.project_shoba_test.SHOBA_TEST.service.token.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

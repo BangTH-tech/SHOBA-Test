@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.LoginDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.RegisterDto;
-import com.project_shoba_test.SHOBA_TEST.service.AuthService;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.LoginDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.RegisterDto;
+import com.project_shoba_test.SHOBA_TEST.service.auth.AuthService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

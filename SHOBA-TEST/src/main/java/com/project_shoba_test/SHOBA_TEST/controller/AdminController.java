@@ -14,23 +14,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.AddNewCategoryDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.AddNewsDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.AddUserDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.EditNewCategoryDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.EditNewsDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.EditUserDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.FilterEmployeeListDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.request.FilterNewListDto;
-import com.project_shoba_test.SHOBA_TEST.model.dto.response.EmployeeListResponse;
-import com.project_shoba_test.SHOBA_TEST.model.dto.response.NewCategoryListResponse;
-import com.project_shoba_test.SHOBA_TEST.model.dto.response.NewListResponse;
-import com.project_shoba_test.SHOBA_TEST.service.NewCategoryService;
-import com.project_shoba_test.SHOBA_TEST.service.NewService;
-import com.project_shoba_test.SHOBA_TEST.service.UserService;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.AddNewCategoryDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCategoryDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.AddNewsDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.EditNewsDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.AddUserDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.EditUserDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.FilterEmployeeListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryDetailResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewDetailResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewListResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeDetailResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeListResponse;
+import com.project_shoba_test.SHOBA_TEST.service.newCategory.NewCategoryService;
+import com.project_shoba_test.SHOBA_TEST.service.news.NewService;
+import com.project_shoba_test.SHOBA_TEST.service.user.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,11 +46,12 @@ public class AdminController {
     private final NewService newService;
 
     private final NewCategoryService newCategoryService;
-    
+
     @PostMapping("/employee-list")
-    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(@RequestBody @Valid FilterEmployeeListDto filterEmployeeListDto) {
+    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(
+            @RequestBody @Valid FilterEmployeeListDto filterEmployeeListDto) {
         Page<EmployeeListResponse> employeeList = userService.getAllEmployees(filterEmployeeListDto);
-        if(employeeList.isEmpty()) {
+        if (employeeList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(employeeList);
@@ -57,7 +62,7 @@ public class AdminController {
         userService.addUser(addUserDto);
         return ResponseEntity.noContent().build();
     }
-    
+
     @PutMapping("/edit-user")
     public ResponseEntity<?> editUser(@RequestBody @Valid EditUserDto editUserDto) {
         userService.editUser(editUserDto);
@@ -73,10 +78,15 @@ public class AdminController {
     @PostMapping("/news-list")
     public ResponseEntity<Page<NewListResponse>> getNewsList(@RequestBody @Valid FilterNewListDto filterNewListDto) {
         Page<NewListResponse> newsList = newService.getAllNews(filterNewListDto);
-        if(newsList.isEmpty()) {
+        if (newsList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(newsList);
+    }
+
+    @GetMapping("/news-detail/{newsId}")
+    public ResponseEntity<NewDetailResponse> getNewsDetail(@PathVariable Long newsId) {
+        return ResponseEntity.ok(newService.getNewDetailResponse(newsId));
     }
 
     @PostMapping("/add-news")
@@ -84,7 +94,7 @@ public class AdminController {
         newService.addNews(addNewsDto);
         return ResponseEntity.noContent().build();
     }
-    
+
     @PutMapping("/edit-news")
     public ResponseEntity<?> editNews(@RequestBody @Valid EditNewsDto editNewsDto) {
         newService.editNews(editNewsDto);
@@ -100,10 +110,15 @@ public class AdminController {
     @GetMapping("/new-category-list")
     public ResponseEntity<List<NewCategoryListResponse>> getNewCategoryList() {
         List<NewCategoryListResponse> newCategoryList = newCategoryService.getAllNewCategory();
-        if(newCategoryList.isEmpty()) {
+        if (newCategoryList.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(newCategoryList);
+    }
+
+    @GetMapping("/new-category-detail/{categoryId}")
+    public ResponseEntity<NewCategoryDetailResponse> getNewCategoryDetail(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(newCategoryService.getCategoryDetailResponseById(categoryId));
     }
 
     @PostMapping("/add-new-category")
@@ -111,7 +126,7 @@ public class AdminController {
         newCategoryService.addNewCategory(addNewCategoryDto);
         return ResponseEntity.noContent().build();
     }
-    
+
     @PutMapping("/edit-new-category")
     public ResponseEntity<?> editNewCategory(@RequestBody @Valid EditNewCategoryDto editNewCategoryDto) {
         newCategoryService.editNewCategory(editNewCategoryDto);
@@ -123,4 +138,10 @@ public class AdminController {
         newCategoryService.deleteNewCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/employee-detail/{id}")
+    public ResponseEntity<EmployeeDetailResponse> getEmployeeDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getEmployeeDetailResponse(id));
+    }
+    
 }
