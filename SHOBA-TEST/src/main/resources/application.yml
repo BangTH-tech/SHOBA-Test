@@ -46,7 +46,7 @@ spring:
   jwt:
     secret-key: d2f21asdabkocxz213123ADSAKDOACZXCMZKADKASODKWOEMKQMKCMAKDMASKDAKDMAKDASM
     access-token:
-      expiry-time: 15000
+      expiry-time: 60000
 google:
   recaptcha:
     site-key: 6LeGjD8rAAAAAL-j6zh2KwdnaZHmpdt0COBRXcYO

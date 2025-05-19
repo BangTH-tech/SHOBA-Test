@@ -60,13 +60,15 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         }
+        log.info(username);
         if (accessToken != null && !accessToken.equals("")) {
             if ((username != null && !username.equals("")) &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                log.info(username);
                 if (userRepository.existsByUsernameOrEmail(username).isPresent()
                         && tokenService.validateToken(accessToken)) {
-                    
+                    log.info("User is authenticated: " + username);
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
