@@ -1,0 +1,55 @@
+<div class="login-container">
+
+    <div class="login-box animated fadeInDown">
+        <div class="login-body">
+            <div class="login-title"><strong>Welcome</strong>, Please login</div>
+            <form name="loginForm" ng-submit="submitForm()" class="form-horizontal">
+                <div>
+                    <span style="color: #f21111; font-weight: bold" ng-show="error">{{errorMessage}}</span>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" required ng-model="formData.username" class="form-control"
+                            placeholder="Username" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="password" required ng-model="formData.password" class="form-control"
+                            placeholder="Password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6 col-xs-12" style="color: white">
+                        <label class="check"><input type="checkbox" class="icheckbox" ng-model="formData.rememberMe"
+                                class="form-control"  /> Remember me
+                            </label>
+                    </div>
+           
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div id="recaptcha-container"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <a href="#/register" class="btn btn-link btn-block">Register</a>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-info btn-block">Log In</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="login-footer">
+
+            <div class="pull-right">
+                <a href="#">About</a> |
+                <a href="#">Privacy</a> |
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+</div>

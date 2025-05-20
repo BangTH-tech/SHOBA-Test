@@ -1,0 +1,115 @@
+<div class="login-container">
+
+    <div class="login-box animated fadeInDown">
+        <div class="login-body">
+            <div class="login-title"><strong>Not a member yet?</strong> Please register</div>
+            <div></div>
+            <form name="loginForm" ng-submit="submitForm()" class="form-horizontal">
+                <div>
+                    <span style="color: #f21111; font-weight: bold" ng-show="error">{{errorMessage}}</span>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.username.$touched && loginForm.username.$error.minlength">Minimum length
+                            for
+                            username is 6</span>
+                    </div>
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.username.$touched && loginForm.username.$error.maxlength">Maximum length
+                            for
+                            username is 50</span>
+                    </div>
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.fullName.$touched && loginForm.fullName.$error.minlength">Minimum length
+                            for
+                            full name is 6</span>
+                    </div>
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.fullName.$touched && loginForm.fullName.$error.maxlength">Maximum length
+                            for
+                            full name is 50</span>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="username" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="formData.username" class="form-control" placeholder="Username" />
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="fullName" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="formData.fullName" class="form-control" placeholder="Full Name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="email" required ng-model="formData.email" class="form-control"
+                            placeholder="Email" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.password.$touched && loginForm.password.$error.minlength">Minimum length
+                            for
+                            password is 6</span>
+                    </div>
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.password.$touched && loginForm.password.$error.maxlength">Maximum length
+                            for
+                            password is 50</span>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="password" name="password" required ng-minlength="6" ng-maxlength="20"
+                            ng-model="formData.password" class="form-control" placeholder="Password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.confirmPassword.$touched && loginForm.confirmPassword.$error.minlength">Minimum
+                            length for
+                            confirm password is 6</span>
+                    </div>
+                    <div>
+                        <span style="color: #f21111; font-weight: bold; padding: 10px 15px"
+                            ng-show="loginForm.confirmPassword.$touched && loginForm.confirmPassword.$error.maxlength">Maximum
+                            length for
+                            confirm password is 50</span>
+                    </div>
+                    <div>
+                        <span id="wrongConfirmPasword"  style="color: #f21111; font-weight: bold; padding: 10px 15px" ng-show="formData.password !== formData.confirmPassword && loginForm.confirmPassword.$touched">Confirm password is not the same as password</span>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="password" name="confirmPassword" required ng-minlength="6" ng-maxlength="20"
+                            ng-model="formData.confirmPassword" class="form-control" placeholder="Confirm Password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <div id="recaptcha-container-register"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <a href="#/login" class="btn btn-link btn-block">Log In</a>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-info btn-block">Register</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="login-footer">
+
+            <div class="pull-right">
+                <a href="#">About</a> |
+                <a href="#">Privacy</a> |
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </div>
+
+</div>
