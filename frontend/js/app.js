@@ -30,6 +30,10 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: 'partials/register.html',
             controller: 'RegisterCtrl'
         })
+        .when('/employee-list', {
+          templateUrl: 'partials/employee-list.html',
+            controller: 'EmployeeListCtrl'
+        })
         .otherwise({
             redirectTo: '/'
         });

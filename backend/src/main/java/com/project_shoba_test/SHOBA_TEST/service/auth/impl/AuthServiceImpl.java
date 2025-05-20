@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
             throw new UnauthorizedException("User is inactive", "User is inactive");
         }
 
-        String accessToken = tokenService.generateAccessToken(user.getUsername());
+        String accessToken = tokenService.generateAccessToken(user.getUsername(), loginDto.isRememberMe());
         tokenService.addTokenToCookie(accessToken, response, loginDto.isRememberMe());
     }
 

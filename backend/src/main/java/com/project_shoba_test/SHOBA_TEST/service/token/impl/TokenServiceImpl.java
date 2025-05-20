@@ -38,7 +38,7 @@ public class TokenServiceImpl implements TokenService {
 
 
     @Override
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String username, boolean rememberMe) {
 
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
@@ -46,7 +46,7 @@ public class TokenServiceImpl implements TokenService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiryTime))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiryTime+ (rememberMe ? 604800000 : 0)))
                 .and()
                 .signWith(getKey())
                 .compact();

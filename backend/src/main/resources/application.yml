@@ -31,7 +31,7 @@ spring:
   application:
     name: Kodeholik
     url: ${APPLICATION_URL_BASE:http://localhost:8080}
-    fe-url: http://localhost:3000
+    fe-url: http://localhost:3001
     admin-fe-url: http://localhost:3000
   data:
     mongodb:

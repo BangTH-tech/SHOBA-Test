@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface TokenService {
 
-    public String generateAccessToken(String username);
+    public String generateAccessToken(String username, boolean rememberMe);
 
     public String extractUsername(String token);
 

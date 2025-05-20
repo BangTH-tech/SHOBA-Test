@@ -69,7 +69,7 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/change-status/{userId}")
+    @PutMapping("/change-status/{userId}")
     public ResponseEntity<?> changeUserStatus(@PathVariable Long userId) {
         userService.changeUserStatus(userId);
         return ResponseEntity.noContent().build();
