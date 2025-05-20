@@ -11,62 +11,16 @@
 
             <li class="xn-title">Navigation</li>
             <li>
-                <a href="index.html"><span class="fa fa-desktop"></span> <span class="xn-text">Dashboard</span></a>
+                <a href="/#/employee-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Employee
+                        List</span></a>
             </li>
-            <li class="xn-openable">
-                <a><span class="fa fa-files-o"></span> <span class="xn-text">Pages</span></a>
-                <ul>
-                    <li><a href="pages-gallery.html"><span class="fa fa-image"></span> Gallery</a></li>
-                    <li><a href="pages-profile.html"><span class="fa fa-user"></span> Profile</a></li>
-                    <li><a href="pages-address-book.html"><span class="fa fa-users"></span> Address Book</a></li>
-                    <li class="xn-openable">
-                        <a href="#"><span class="fa fa-clock-o"></span> Timeline</a>
-                        <ul>
-                            <li><a href="pages-timeline.html"><span class="fa fa-align-center"></span> Default</a></li>
-                            <li><a href="pages-timeline-simple.html"><span class="fa fa-align-justify"></span> Full
-                                    Width</a></li>
-                        </ul>
-                    </li>
-                    <li class="xn-openable">
-                        <a href="#"><span class="fa fa-envelope"></span> Mailbox</a>
-                        <ul>
-                            <li><a href="pages-mailbox-inbox.html"><span class="fa fa-inbox"></span> Inbox</a></li>
-                            <li><a href="pages-mailbox-message.html"><span class="fa fa-file-text"></span> Message</a>
-                            </li>
-                            <li><a href="pages-mailbox-compose.html"><span class="fa fa-pencil"></span> Compose</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="pages-messages.html"><span class="fa fa-comments"></span> Messages</a></li>
-                    <li><a href="pages-calendar.html"><span class="fa fa-calendar"></span> Calendar</a></li>
-                    <li><a href="pages-tasks.html"><span class="fa fa-edit"></span> Tasks</a></li>
-                    <li><a href="pages-content-table.html"><span class="fa fa-columns"></span> Content Table</a></li>
-                    <li><a href="pages-faq.html"><span class="fa fa-question-circle"></span> FAQ</a></li>
-                    <li><a href="pages-search.html"><span class="fa fa-search"></span> Search</a></li>
-                    <li class="xn-openable">
-                        <a href="#"><span class="fa fa-file"></span> Blog</a>
-
-                        <ul>
-                            <li><a href="pages-blog-list.html"><span class="fa fa-copy"></span> List of Posts</a></li>
-                            <li><a href="pages-blog-post.html"><span class="fa fa-file-o"></span>Single Post</a></li>
-                        </ul>
-                    </li>
-                    <li class="xn-openable">
-                        <a href="#"><span class="fa fa-sign-in"></span> Login</a>
-                        <ul>
-                            <li><a href="pages-login.html">App Login</a></li>
-                            <li><a href="pages-login-website.html">Website Login</a></li>
-                            <li><a href="pages-login-website-light.html"> Website Login Light</a></li>
-                        </ul>
-                    </li>
-                    <li class="xn-openable">
-                        <a href="#"><span class="fa fa-warning"></span> Error Pages</a>
-                        <ul>
-                            <li><a href="pages-error-404.html">Error 404 Sample 1</a></li>
-                            <li><a href="pages-error-404-2.html">Error 404 Sample 2</a></li>
-                            <li><a href="pages-error-500.html"> Error 500</a></li>
-                        </ul>
-                    </li>
-                </ul>
+            <li>
+                <a href="/#/news-list"><span class="fa-solid fa-list"></span> <span class="xn-text">News
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/category-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Category
+                        List</span></a>
             </li>
 
         </ul>
@@ -96,11 +50,7 @@
         <!-- END X-NAVIGATION VERTICAL -->
 
         <!-- START BREADCRUMB -->
-        <ul class="breadcrumb">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Tables</a></li>
-            <li class="active">Basic</li>
-        </ul>
+
         <!-- END BREADCRUMB -->
 
         <!-- PAGE TITLE -->
@@ -113,7 +63,7 @@
 
             <!-- START RESPONSIVE TABLES -->
             <div class="row">
-                <div class="col-md-12">
+                <div class="">
                     <div class="panel panel-default">
 
                         <div class="panel-heading" style="display: flex; justify-content: space-between;">
@@ -121,7 +71,8 @@
                                 <h2 class="panel-title" style="font-weight: bold;">Employee List</h2>
                             </div>
                             <div>
-                                <button class="btn btn-default"><i class="fa fa-plus"></i> Add New Employee</button>
+                                <button ng-click="openModal()" class="btn btn-default"><i class="fa fa-plus"></i> Add
+                                    New Employee</button>
                             </div>
                         </div>
 
@@ -141,7 +92,8 @@
                                             <div class="input-group">
                                                 <span class="input-group-addon"><span
                                                         class="fa fa-search"></span></span>
-                                                <input type="text" ng-model="filter.search" ng-change="fetchEmpsByPage()" style="width: 240px;"
+                                                <input type="text" ng-model="filter.search"
+                                                    ng-change="fetchEmpsByPage()" style="width: 240px;"
                                                     class="form-control"
                                                     placeholder="Search username, full name or email" />
                                             </div>
@@ -197,6 +149,9 @@
                                         <th>
                                             Status
                                         </th>
+                                        <th>
+                                            Action
+                                        </th>
                                     </tr>
 
                                 </thead>
@@ -214,6 +169,9 @@
                                                     ng-checked="emp.status === 'ACTIVE'" />
                                                 <span></span>
                                             </label>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-default active" ng-click="openModalEdit(emp)"><i class="fa fa-pencil"></i></button>
                                         </td>
                                     </tr>
 
@@ -296,3 +254,143 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="myModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Add Employee</h3>
+  </div>
+      <form name="addEmployeeForm" ng-submit="addEmployee()" class="form-horizontal">
+
+  <div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Username</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="username" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="formData.username" class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="addEmployeeForm.username.$touched && addEmployeeForm.username.$error.minlength">Minimum length
+                            for
+                            username is 6</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Full Name</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="fullName" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="formData.fullName" class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="addEmployeeForm.fullName.$touched && addEmployeeForm.fullName.$error.minlength">Minimum length
+                            for
+                            full name is 6</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Email</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="email" name="email" required ng-minlength="3"
+                            ng-model="formData.email" required class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Role</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <select ng-model="formData.role" name="role" class="form-control select">
+            <option ng-value="''" >Select Role</option>
+                                            <option ng-value="'ADMIN'" >ADMIN</option>
+                                            <option ng-value="'EMPLOYEE'">EMPLOYEE</option>
+                                            <option ng-value="'GUEST'">GUEST</option>
+                                        </select>
+                                        <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="addEmployeeForm.role.$touched && addEmployeeForm.role==''">Please select role</span>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Add</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+  </form>
+
+</script>
+
+<script type="text/ng-template" id="editModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Edit Employee</h3>
+  </div>
+      <form name="editEmployeeForm" ng-submit="editEmployee()" class="form-horizontal">
+
+  <div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Username</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="username" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="editData.username" class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="editEmployeeForm.username.$touched && editEmployeeForm.username.$error.minlength">Minimum length
+                            for
+                            username is 6</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Full Name</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="fullName" required ng-minlength="3" ng-maxlength="50"
+                            ng-model="editData.fullName"  class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="editEmployeeForm.fullName.$touched && editEmployeeForm.fullName.$error.minlength">Minimum length
+                            for
+                            full name is 6</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Email</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="email" name="email" required ng-minlength="3"
+                            ng-model="editData.email"  required class="form-control" />
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Role</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <select ng-model="editData.role"  name="role" class="form-control select">
+                                            <option ng-value="'ADMIN'" >ADMIN</option>
+                                            <option ng-value="'EMPLOYEE'">EMPLOYEE</option>
+                                            <option ng-value="'GUEST'">GUEST</option>
+                                        </select>
+                                        <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="editEmployeeForm.role.$touched && editEmployeeForm.role==''">Please select role</span>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+  </form>
+
+</script>

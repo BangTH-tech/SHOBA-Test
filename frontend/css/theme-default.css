@@ -27,7 +27,15 @@
     font-style: italic;
     gap: 10px;
   }
-
+.modal-vertical-centered .modal-dialog {
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: auto;
+  max-width: 50%;
+}
   .no-results i {
     font-size: 28px;
     color: #ccc;

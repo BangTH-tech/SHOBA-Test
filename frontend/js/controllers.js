@@ -77,7 +77,7 @@ app.controller('RegisterCtrl', function ($scope, $http, $location) {
     }
 });
 
-app.controller('EmployeeListCtrl', function ($scope, $http, $location) {
+app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal) {
     $scope.emps = [];
     $scope.currentPage = 0;
     $scope.totalPages = 0;
@@ -93,7 +93,6 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location) {
         status: ''
     }
     $scope.fetchEmpsByPage = function () {
-        console.log($scope.filter)
         if ($scope.filter.role == '') {
             $scope.filter.role = null;
         }
@@ -200,4 +199,128 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location) {
                 }
             });
     };
+    $scope.formData = {
+        username: '',
+        fullName: '',
+        email: '',
+        role: 'EMPLOYEE'
+    }
+
+    $scope.editData = {
+        username: '',
+        fullName: '',
+        email: '',
+        role: 'EMPLOYEE'
+    }
+
+    $scope.openModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'myModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, onLoad) {
+
+                $scope.addEmployee = function () {
+                    if ($scope.formData.role != null) {
+                        $http.post('http://localhost:8080/api/v1/admin/add-user', $scope.formData,
+                            {
+                                withCredentials: true
+                            }
+                        )
+                            .then(function (response) {
+                                toastr.success("Add employee successfully!");
+                                $uibModalInstance.close();
+                                onLoad();
+
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+
+                                toastr.error(error.data.message);
+                                $uibModalInstance.close();
+                            });
+                    }
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+                
+            },
+            resolve: {
+                onLoad: function() {
+                    return $scope.fetchEmpsByPage;
+                }
+            }
+        });
+    };
+
+
+    $scope.openModalEdit = function (emp) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'editModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, editData, onLoad) {
+                $scope.editData = angular.copy(editData);
+                $scope.getEmployeeDetail = function () {
+                    $http.get('http://localhost:8080/api/v1/admin/employee-detail/' + emp.id,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            editData = response.data;
+                            console.log(editData);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+                $scope.getEmployeeDetail();
+                $scope.editEmployee = function () {
+                    if ($scope.editData.role != null) {
+                        $http.put('http://localhost:8080/api/v1/admin/edit-user', $scope.editData,
+                            {
+                                withCredentials: true
+                            }
+                        )
+                            .then(function (response) {
+                                toastr.success("Edit employee successfully!");
+                                $uibModalInstance.close();
+                                onLoad();
+
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+
+                                toastr.error(error.data.message);
+                                $uibModalInstance.close();
+                            });
+                    }
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+                
+            },
+            resolve: {
+                editData: function () {
+                    return emp;
+                },
+                onLoad: function() {
+                    return $scope.fetchEmpsByPage;
+                }
+            }
+        });
+    };
+
 });
+

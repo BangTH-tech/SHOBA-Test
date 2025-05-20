@@ -1,4 +1,4 @@
-var app = angular.module('sampleApp', ['ngRoute']);
+var app = angular.module('sampleApp', ['ngRoute', 'ui.bootstrap']);
 function waitForGrecaptchaAndRender(containerId, siteKey) {
   var checkInterval = setInterval(function () {
     if (window.grecaptcha && window.grecaptcha.render) {
@@ -34,6 +34,7 @@ app.config(function($routeProvider, $locationProvider) {
           templateUrl: 'partials/employee-list.html',
             controller: 'EmployeeListCtrl'
         })
+     
         .otherwise({
             redirectTo: '/'
         });
