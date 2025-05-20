@@ -1,4 +1,4 @@
-var app = angular.module('sampleApp', ['ngRoute', 'ui.bootstrap']);
+var app = angular.module('sampleApp', ['ngRoute', 'ui.bootstrap', 'ui.select', 'ngSanitize']);
 function waitForGrecaptchaAndRender(containerId, siteKey) {
   var checkInterval = setInterval(function () {
     if (window.grecaptcha && window.grecaptcha.render) {
@@ -41,6 +41,10 @@ app.config(function($routeProvider, $locationProvider) {
         .when('/category-list', {
           templateUrl: 'partials/category-list.html',
             controller: 'CategoryListCtrl'
+        })
+        .when('/log-list', {
+          templateUrl: 'partials/log-list.html',
+            controller: 'LogListCtrl'
         })
         .otherwise({
             redirectTo: '/'

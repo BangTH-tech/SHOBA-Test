@@ -1,6 +1,8 @@
 package com.project_shoba_test.SHOBA_TEST.service.log.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.log.FilterLogListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.log.FunctionEnum;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.log.HttpLogResponse;
 import com.project_shoba_test.SHOBA_TEST.model.entity.HttpLog;
 import com.project_shoba_test.SHOBA_TEST.repository.HttpLogRepository;
@@ -66,15 +69,21 @@ public class HttpLogServiceImpl implements HttpLogService {
     public Page<HttpLogResponse> getAllLog(FilterLogListDto filterLogListDto) {
         log.info(filterLogListDto);
         Pageable pageable = PageRequest.of(filterLogListDto.getPage(), filterLogListDto.getSize(),
-                filterLogListDto.isAscending() ? Sort.by("timestamp").ascending() : Sort.by("timestamp").descending());
+                filterLogListDto.isAscending() ? Sort.by("createdAt").ascending() : Sort.by("createdAt").descending());
         log.info(filterLogListDto.getFunction() != null ? functionUrl.get(filterLogListDto.getFunction().toString()) : null);
         log.info(filterLogListDto.getStatus() != null ? statusText.get(filterLogListDto.getStatus().toString()) : null);
         Page<HttpLog> logs = httpLogRepository.searchLogs(
-            filterLogListDto.getMethod().toString(),
+            filterLogListDto.getMethod() != null ? filterLogListDto.getMethod().toString() : null,
             filterLogListDto.getFunction() != null ? functionUrl.get(filterLogListDto.getFunction().toString()) : null,
             filterLogListDto.getStatus() != null ? statusText.get(filterLogListDto.getStatus().toString()) : null,
+            filterLogListDto.getCreatedBy(),
             pageable);
         return logs.map(httpLogResponseMapper::mapTo);
+    }
+
+    @Override
+    public List<FunctionEnum> getAllFunctions() {
+        return Arrays.asList(FunctionEnum.values());
     }
 
 }

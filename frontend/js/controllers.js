@@ -600,8 +600,8 @@ app.controller('NewsListCtrl', function ($scope, $http, $location, $uibModal) {
         var modalInstance = $uibModal.open({
             templateUrl: 'deleteModal.html',
             windowClass: 'modal-vertical-centered',
-            controller: function ($scope, $uibModalInstance,  onLoad, filter, currentPage) {
-     
+            controller: function ($scope, $uibModalInstance, onLoad, filter, currentPage) {
+
                 $scope.deleteNews = function () {
                     $http.delete('http://localhost:8080/api/v1/admin/delete-news/' + news.id,
                         {
@@ -633,10 +633,10 @@ app.controller('NewsListCtrl', function ($scope, $http, $location, $uibModal) {
 
             },
             resolve: {
-                filter: function() {
+                filter: function () {
                     return $scope.filter;
                 },
-                currentPage: function() {
+                currentPage: function () {
                     return $scope.currentPage;
                 },
                 onLoad: function () {
@@ -667,7 +667,7 @@ app.controller('CategoryListCtrl', function ($scope, $http, $location, $uibModal
                     $scope.totalElements = response.data.length;
                     console.log($scope.categories)
                 }
-                
+
             })
             .catch(function (error) {
                 console.error("Lỗi khi lấy dữ liệu:", error);
@@ -837,8 +837,8 @@ app.controller('CategoryListCtrl', function ($scope, $http, $location, $uibModal
         var modalInstance = $uibModal.open({
             templateUrl: 'deleteModal.html',
             windowClass: 'modal-vertical-centered',
-            controller: function ($scope, $uibModalInstance,  onLoad) {
-     
+            controller: function ($scope, $uibModalInstance, onLoad) {
+
                 $scope.deleteNews = function () {
                     $http.delete('http://localhost:8080/api/v1/admin/delete-new-category/' + category.id,
                         {
@@ -877,3 +877,171 @@ app.controller('CategoryListCtrl', function ($scope, $http, $location, $uibModal
 
 });
 
+app.controller('LogListCtrl', function ($scope, $http, $location, $uibModal) {
+    $scope.logs = [];
+    $scope.functions = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.totalElements = 0;
+    $scope.numberOfElements = 0;
+    $scope.filter = {
+        page: 0,
+        size: 5,
+        sortBy: '',
+        ascending: true,
+        method: '',
+        function: 'All Function',
+        status: '',
+        createdBy: ''
+    }
+    
+    $scope.fetchFunctions = function () {
+        $http.get('http://localhost:8080/api/v1/admin/get-all-functions', {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+
+                $scope.functions.push(
+                    'All Function'
+                )
+                $scope.functions = $scope.functions.concat(response.data);
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+
+    $scope.fetchLogsByPage = function () {
+
+        $scope.newsFilter = angular.copy($scope.filter);
+        if ($scope.newsFilter.method == '') {
+            $scope.newsFilter.method = null;
+        }
+        if ($scope.newsFilter.function == 'All Function') {
+            $scope.newsFilter.function = null;
+        }
+        if ($scope.newsFilter.status == '') {
+            $scope.newsFilter.status = null;
+        }
+        if ($scope.newsFilter.createdBy == '') {
+            $scope.newsFilter.createdBy = null;
+        }
+        $http.post('http://localhost:8080/api/v1/admin/log-list', $scope.newsFilter, {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+                if (response.data != '') {
+                    $scope.logs = response.data;
+                    $scope.currentPage = response.data.number + 1;
+                    $scope.totalPages = response.data.totalPages;
+                    $scope.totalElements = response.data.totalElements;
+                    $scope.numberOfElements = response.data.numberOfElements;
+                }
+                else {
+                    $scope.totalElements = 0;
+                    $scope.numberOfElements = 0;
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchFunctions();
+    $scope.fetchLogsByPage();
+    $scope.getPageRange = function () {
+        var total = $scope.logs.totalPages;
+        var current = $scope.currentPage;
+        var delta = 2;
+        var range = [];
+        var left = current - delta;
+        var right = current + delta;
+
+        for (var i = 1; i <= total; i++) {
+            if (i == 1 || i == total || (i >= left && i <= right)) {
+                range.push(i);
+            }
+        }
+
+        // Thêm dấu "..." khi cần
+        var pagination = [];
+        var last;
+
+        range.forEach(function (i) {
+            if (last) {
+                if (i - last === 2) {
+                    pagination.push(last + 1);
+                } else if (i - last > 2) {
+                    pagination.push('...');
+                }
+            }
+            pagination.push(i);
+            last = i;
+        });
+
+        return pagination;
+    };
+
+    $scope.goToPage = function (page) {
+        if (page === '...') return;
+        console.log(page);
+        $scope.currentPage = page;
+        $scope.filter.page = page - 1;
+        // Gọi API để lấy dữ liệu trang mới nếu cần
+        $scope.fetchLogsByPage();
+    };
+
+    $scope.sortBy = function (column) {
+        if ($scope.filter.sortBy == column) {
+            $scope.filter.ascending = !$scope.filter.ascending;
+        }
+        else {
+            $scope.filter.sortBy = column;
+            $scope.filter.ascending = true;
+        }
+        $scope.fetchLogsByPage();
+    };
+
+    $scope.openModalDetail = function (response) {
+        console.log(response);
+        var modalInstance = $uibModal.open({
+            templateUrl: 'modal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance) {
+
+                $scope.formatJson = function () {
+                    try {
+                        console.log(response);
+
+                        const obj = JSON.parse(response);
+                        return JSON.stringify(obj, null, 2); // indent 2 spaces
+                    } catch (e) {
+                        if (response == '') {
+                            return 'Empty'
+                        }
+                        return response; // nếu không phải JSON hợp lệ, hiển thị nguyên văn
+                    }
+                };
+
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            }
+        });
+    };
+
+
+});

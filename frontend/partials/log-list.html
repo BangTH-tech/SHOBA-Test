@@ -1,0 +1,245 @@
+<div class="page-container">
+
+    <!-- START PAGE SIDEBAR -->
+    <div class="page-sidebar">
+        <!-- START X-NAVIGATION -->
+        <ul class="x-navigation">
+            <li class="xn-logo">
+                <a href="index.html">SHOBA Test</a>
+                <a href="#" class="x-navigation-control"></a>
+            </li>
+
+            <li class="xn-title">Navigation</li>
+            <li>
+                <a href="/#/employee-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Employee
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/news-list"><span class="fa-solid fa-list"></span> <span class="xn-text">News
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/category-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Category
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/log-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Log
+                        List</span></a>
+            </li>
+        </ul>
+        <!-- END X-NAVIGATION -->
+    </div>
+    <!-- END PAGE SIDEBAR -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+        <!-- START X-NAVIGATION VERTICAL -->
+        <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+            <!-- TOGGLE NAVIGATION -->
+            <li class="xn-icon-button">
+                <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+            </li>
+            <!-- END TOGGLE NAVIGATION -->
+            <!-- SEARCH -->
+
+            <!-- END SEARCH -->
+            <!-- SIGN OUT -->
+            <li class="xn-icon-button pull-right">
+                <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>
+            </li>
+
+        </ul>
+        <!-- END X-NAVIGATION VERTICAL -->
+
+        <!-- START BREADCRUMB -->
+
+        <!-- END BREADCRUMB -->
+
+        <!-- PAGE TITLE -->
+
+        <!-- END PAGE TITLE -->
+
+        <!-- PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrap">
+
+
+            <!-- START RESPONSIVE TABLES -->
+            <div class="row">
+                <div class="">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading" style="display: flex; justify-content: space-between;">
+                            <div>
+                                <h2 class="panel-title" style="font-weight: bold;">Log List</h2>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div style="display: flex; justify-content: space-between;margin-bottom: 10px;">
+                                <div style=" font-size: small;">
+                                    Showing <select ng-model="filter.size" ng-change="fetchLogsByPage()">
+                                        <option ng-value="5">5</option>
+                                        <option ng-value="10">10</option>
+                                        <option ng-value="20">20</option>
+                                        <option ng-value="25">25</option>
+                                    </select> entries
+                                </div>
+                                <div style="display: flex;">
+                                    <div class="form-group">
+                                        <ui-select ng-model="filter.function" ng-change="fetchLogsByPage()"
+                                            theme="bootstrap" search-enabled="true">
+                                            <ui-select-match
+                                                placeholder="Chọn function...">{{$select.selected}}</ui-select-match>
+                                            <ui-select-choices repeat="f in functions | filter: $select.search">
+                                                <div ng-bind-html="f | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-xs-12">
+                                            <div class="input-group">
+
+                                                <input type="text" ng-model="filter.createdBy" style="width: 240px;"
+                                                    class="form-control" placeholder="Search user" />
+                                                <span ng-click="fetchLogsByPage()" style="cursor: pointer;" class="input-group-addon"><span
+                                                        class="fa fa-search"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-right: 10px;">
+                                        <select ng-model="filter.method" class="form-control select"
+                                            ng-change="fetchLogsByPage()">
+                                            <option ng-value="''">All Method</option>
+                                            <option ng-value="'GET'">GET</option>
+                                            <option ng-value="'POST'">POST</option>
+                                            <option ng-value="'PUT'">PUT</option>
+                                            <option ng-value="'DELETE'">DELETE</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <select ng-model="filter.status" class="form-control select"
+                                            ng-change="fetchLogsByPage()">
+                                            <option ng-value="''">All Status</option>
+                                            <option ng-value="'OK'">OK</option>
+                                            <option ng-value="'CREATED'">CREATED</option>
+                                            <option ng-value="'BAD_REQUEST'">BAD_REQUEST</option>
+                                            <option ng-value="'UNAUTHORIZED'">UNAUTHORIZED</option>
+                                            <option ng-value="'NOT_FOUND'">NOT_FOUND</option>
+                                            <option ng-value="'FORBIDDEN'">FORBIDDEN</option>
+                                            <option ng-value="'NO_CONTENT'">NO_CONTENT</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div ng-if="totalElements == 0" class="no-results">
+                                <i class="fa fa-search"></i> <!-- Font Awesome icon -->
+                                No results found
+                            </div>
+                            <table class="table datatable" ng-if="totalElements > 0">
+                                <thead>
+                                    <tr>
+                                        <th width="50" ng-click="sortBy('id')">
+                                            Method <span ng-if="filter.sortBy === 'id'">{{ filter.ascending ? '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th ng-click="sortBy('username')">
+                                            Url <span ng-if="filter.sortBy === 'username'">{{ filter.ascending ?
+                                                '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th ng-click="sortBy('fullName')">
+                                            Request <span ng-if="filter.sortBy === 'fullName'">{{ filter.ascending ?
+                                                '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Created At
+                                        </th>
+                                        <th>
+                                            Created By
+                                        </th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr ng-click="openModalDetail(log.responseBody)" ng-repeat="log in logs.content"
+                                        style="cursor: pointer;">
+                                        <td>{{ log.method }}</td>
+                                        <td>{{ log.url }}</td>
+                                        <td>{{ log.requestBody }}</td>
+                                        <td>{{ log.responseStatus }}</td>
+                                        <td>{{ log.createdAt }}</td>
+                                        <td>{{ log.createdBy }}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div ng-if="totalElements > 0"
+                                style="margin-top: 10px; display: flex; justify-content: space-between;">
+                                <div style="font-size: small;">
+                                    Showing <span style="font-weight: bold;">{{(currentPage - 1) * 5 + 1}} to
+                                        {{(currentPage - 1) * 5 + numberOfElements}} </span> of <span
+                                        style="font-weight: bold;">{{totalElements}}</span> entries
+                                </div>
+                                <div style="display: flex;">
+                                    <ul class="pagination">
+                                        <li><a href=""
+                                                ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">Previous</a>
+                                        </li>
+
+                                        <li ng-repeat="page in getPageRange() track by $index"
+                                            ng-class="{active: currentPage == page}">
+                                            <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
+                                            <span ng-if="page === '...'">...</span>
+                                        </li>
+                                        <li>
+                                            <a href=""
+                                                ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END RESPONSIVE TABLES -->
+
+            <!-- END PAGE CONTENT WRAPPER -->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTAINER -->
+
+<script type="text/ng-template" id="modal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Log Detail</h3>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-group row" style="display:flex; flex-direction: column">
+        <div>
+  <label class="control-label">Response Body</label>
+        </div>
+  <div >
+    <pre style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; max-height: 400px; overflow: auto;">
+{{ formatJson() }}
+    </pre>
+  </div>
+</div>
+
+  </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+
+</script>

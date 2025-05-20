@@ -22,7 +22,7 @@ public class HttpLogRepositoryImpl implements HttpLogRepositoryCustom {
     private final MongoTemplate mongoTemplate;
 
     @Override
-    public Page<HttpLog> searchLogs(String method, String url, Integer status, Pageable pageable) {
+    public Page<HttpLog> searchLogs(String method, String url, Integer status, String createdBy, Pageable pageable) {
         List<Criteria> criteriaList = new ArrayList<>();
 
         if (method != null && !method.isBlank()) {
@@ -35,6 +35,10 @@ public class HttpLogRepositoryImpl implements HttpLogRepositoryCustom {
 
         if (status != null) {
             criteriaList.add(Criteria.where("responseStatus").is(status));
+        }
+
+        if (createdBy != null) {
+            criteriaList.add(Criteria.where("createdBy").is(createdBy));
         }
 
         Criteria finalCriteria = criteriaList.isEmpty()

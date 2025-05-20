@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.log.FilterLogListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.log.FunctionEnum;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.AddNewCategoryDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCategoryDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.AddNewsDto;
@@ -163,5 +164,10 @@ public class AdminController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(logList);
+    }
+
+    @GetMapping("/get-all-functions")
+    public ResponseEntity<List<FunctionEnum>> getAllFunctions() {
+        return ResponseEntity.ok(httpLogService.getAllFunctions());
     }
 }

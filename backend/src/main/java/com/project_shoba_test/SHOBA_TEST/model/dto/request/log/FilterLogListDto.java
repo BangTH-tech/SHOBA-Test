@@ -25,4 +25,6 @@ public class FilterLogListDto {
 
     private StatusEnum status;
 
+    private String createdBy;
+
 }
