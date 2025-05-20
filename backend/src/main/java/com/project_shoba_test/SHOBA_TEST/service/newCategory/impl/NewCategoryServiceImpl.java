@@ -8,6 +8,7 @@ import com.project_shoba_test.SHOBA_TEST.exception.BadRequestException;
 import com.project_shoba_test.SHOBA_TEST.exception.NotFoundException;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.AddNewCategoryDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCategoryDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.CategoryShortResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.entity.NewCategory;
@@ -16,6 +17,7 @@ import com.project_shoba_test.SHOBA_TEST.repository.NewCategoryRepository;
 import com.project_shoba_test.SHOBA_TEST.repository.NewRepository;
 import com.project_shoba_test.SHOBA_TEST.service.newCategory.NewCategoryService;
 import com.project_shoba_test.SHOBA_TEST.utils.mapper.newCategory.AddNewCategoryMapper;
+import com.project_shoba_test.SHOBA_TEST.utils.mapper.newCategory.CategoryShortResponseMapper;
 import com.project_shoba_test.SHOBA_TEST.utils.mapper.newCategory.EditNewCategoryMapper;
 import com.project_shoba_test.SHOBA_TEST.utils.mapper.newCategory.NewCategoryDetailMapper;
 
@@ -34,6 +36,8 @@ public class NewCategoryServiceImpl implements NewCategoryService {
     private final NewRepository newRepository;
 
     private final NewCategoryDetailMapper newCategoryDetailMapper;
+
+    private final CategoryShortResponseMapper categoryShortResponseMapper;
 
     @Override
     public NewCategory getCategoryById(Long id) {
@@ -84,6 +88,14 @@ public class NewCategoryServiceImpl implements NewCategoryService {
     public NewCategoryDetailResponse getCategoryDetailResponseById(Long id) {
         NewCategory newCategory = getCategoryById(id);
         return newCategoryDetailMapper.mapTo(newCategory);
+    }
+
+    @Override
+    public List<CategoryShortResponse> getAllCategoryShortResponse() {
+        List<NewCategory> categories = newCategoryRepository.findAll();
+        return categories.stream()
+                .map(category -> new CategoryShortResponse(category.getId(), category.getName()))
+                .toList();
     }
     
 }

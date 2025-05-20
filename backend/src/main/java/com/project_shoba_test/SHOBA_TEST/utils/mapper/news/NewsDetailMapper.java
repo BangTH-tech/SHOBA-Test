@@ -19,6 +19,7 @@ public class NewsDetailMapper implements Mapper<NewDetailResponse, News> {
     @Override
     public NewDetailResponse mapTo(News b) {
         NewDetailResponse newListResponse = mapper.map(b, NewDetailResponse.class);
+        newListResponse.setCategoryId(b.getCategory().getId());
         newListResponse.setCategoryName(b.getCategory().getName());
         newListResponse.setAuthorUsername(b.getCreatedBy().getUsername());
         newListResponse.setAuthorEmail(b.getCreatedBy().getEmail());

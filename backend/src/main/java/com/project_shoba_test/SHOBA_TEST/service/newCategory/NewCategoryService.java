@@ -9,12 +9,16 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCa
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.AddNewsDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.EditNewsDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.CategoryShortResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.entity.NewCategory;
 
 public interface NewCategoryService {
+
+    public List<CategoryShortResponse> getAllCategoryShortResponse();
+
     public NewCategory getCategoryById(Long id);
 
     public NewCategoryDetailResponse getCategoryDetailResponseById(Long id);

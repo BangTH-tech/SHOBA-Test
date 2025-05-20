@@ -34,7 +34,10 @@ app.config(function($routeProvider, $locationProvider) {
           templateUrl: 'partials/employee-list.html',
             controller: 'EmployeeListCtrl'
         })
-     
+        .when('/news-list', {
+          templateUrl: 'partials/news-list.html',
+            controller: 'NewsListCtrl'
+        })
         .otherwise({
             redirectTo: '/'
         });

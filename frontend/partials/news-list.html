@@ -1,0 +1,366 @@
+<div class="page-container">
+
+    <!-- START PAGE SIDEBAR -->
+    <div class="page-sidebar">
+        <!-- START X-NAVIGATION -->
+        <ul class="x-navigation">
+            <li class="xn-logo">
+                <a href="index.html">SHOBA Test</a>
+                <a href="#" class="x-navigation-control"></a>
+            </li>
+
+            <li class="xn-title">Navigation</li>
+            <li>
+                <a href="/#/employee-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Employee
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/news-list"><span class="fa-solid fa-list"></span> <span class="xn-text">News
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/category-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Category
+                        List</span></a>
+            </li>
+
+        </ul>
+        <!-- END X-NAVIGATION -->
+    </div>
+    <!-- END PAGE SIDEBAR -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+        <!-- START X-NAVIGATION VERTICAL -->
+        <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+            <!-- TOGGLE NAVIGATION -->
+            <li class="xn-icon-button">
+                <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+            </li>
+            <!-- END TOGGLE NAVIGATION -->
+            <!-- SEARCH -->
+
+            <!-- END SEARCH -->
+            <!-- SIGN OUT -->
+            <li class="xn-icon-button pull-right">
+                <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>
+            </li>
+
+        </ul>
+        <!-- END X-NAVIGATION VERTICAL -->
+
+        <!-- START BREADCRUMB -->
+
+        <!-- END BREADCRUMB -->
+
+        <!-- PAGE TITLE -->
+
+        <!-- END PAGE TITLE -->
+
+        <!-- PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrap">
+
+
+            <!-- START RESPONSIVE TABLES -->
+            <div class="row">
+                <div class="">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading" style="display: flex; justify-content: space-between;">
+                            <div>
+                                <h2 class="panel-title" style="font-weight: bold;">News List</h2>
+                            </div>
+                            <div>
+                                <button ng-click="openModal()" class="btn btn-default"><i class="fa fa-plus"></i> Add
+                                    News</button>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div style="display: flex; justify-content: space-between;margin-bottom: 10px;">
+                                <div style=" font-size: small;">
+                                    Showing <select ng-model="filter.size" ng-change="fetchNewsByPage()">
+                                        <option ng-value="5">5</option>
+                                        <option ng-value="10">10</option>
+                                        <option ng-value="20">20</option>
+                                        <option ng-value="25">25</option>
+                                    </select> entries
+                                </div>
+                                <div style="display: flex;">
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-xs-12">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><span
+                                                        class="fa fa-search"></span></span>
+                                                <input type="text" ng-model="filter.search"
+                                                    ng-change="fetchNewsByPage()" style="width: 240px;"
+                                                    class="form-control" placeholder="Search title" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-right: 10px;">
+                                        <select ng-model="filter.categoryId"
+                                            ng-options="c.id as c.name for c in categories" class="form-control select"
+                                            ng-change="fetchNewsByPage()">
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div ng-if="totalElements == 0" class="no-results">
+                                <i class="fa fa-search"></i> <!-- Font Awesome icon -->
+                                No results found
+                            </div>
+                            <table class="table datatable" ng-if="totalElements > 0">
+                                <thead>
+                                    <tr>
+                                        <th width="50" ng-click="sortBy('id')">
+                                            ID <span ng-if="filter.sortBy === 'id'">{{ filter.ascending ? '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th ng-click="sortBy('title')">
+                                            Title <span ng-if="filter.sortBy === 'title'">{{ filter.ascending ?
+                                                '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th>
+                                            Category Name
+                                        </th>
+                                        <th>
+                                            Author Username
+                                        </th>
+                                        <th>
+                                            Author Email
+                                        </th>
+                                        <th ng-click="sortBy('createdAt')">
+                                            Created At<span ng-if="filter.sortBy === 'createdAt'">{{ filter.ascending ?
+                                                '▲' : '▼'
+                                                }}</span>
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="new in news.content">
+                                        <td>{{ new.id }}</td>
+                                        <td>{{ new.title }}</td>
+                                        <td>{{ new.categoryName }}</td>
+                                        <td>{{ new.authorUsername }}</td>
+                                        <td>{{ new.authorEmail }}</td>
+                                        <td>{{ new.createdAt }}</td>
+                                        <td>
+                                            <button class="btn btn-default active" ng-click="openModalEdit(new)"><i
+                                                    class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-default active" ng-click="openModalDelete(new)"><i class="fa fa-eraser"></i></button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div ng-if="totalElements > 0"
+                                style="margin-top: 10px; display: flex; justify-content: space-between;">
+                                <div style="font-size: small;">
+                                    Showing <span style="font-weight: bold;">{{(currentPage - 1) * 5 + 1}} to
+                                        {{(currentPage - 1) * 5 + numberOfElements}} </span> of <span
+                                        style="font-weight: bold;">{{totalElements}}</span> entries
+                                </div>
+                                <div style="display: flex;">
+                                    <ul class="pagination">
+                                        <li><a href=""
+                                                ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">Previous</a>
+                                        </li>
+
+                                        <li ng-repeat="page in getPageRange() track by $index"
+                                            ng-class="{active: currentPage == page}">
+                                            <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
+                                            <span ng-if="page === '...'">...</span>
+                                        </li>
+                                        <li>
+                                            <a href=""
+                                                ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END RESPONSIVE TABLES -->
+
+            <!-- END PAGE CONTENT WRAPPER -->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTAINER -->
+
+<!-- MESSAGE BOX-->
+<div class="message-box animated fadeIn" data-sound="alert" id="mb-remove-row">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title"><span class="fa fa-times"></span> Remove <strong>Data</strong> ?</div>
+            <div class="mb-content">
+                <p>Are you sure you want to remove this row?</p>
+                <p>Press Yes if you sure.</p>
+            </div>
+            <div class="mb-footer">
+                <div class="pull-right">
+                    <button class="btn btn-success btn-lg mb-control-yes">Yes</button>
+                    <button class="btn btn-default btn-lg mb-control-close">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END MESSAGE BOX-->
+
+<!-- MESSAGE BOX-->
+<div class="message-box animated fadeIn" data-sound="alert" id="mb-signout">
+    <div class="mb-container">
+        <div class="mb-middle">
+            <div class="mb-title"><span class="fa fa-sign-out"></span> Log <strong>Out</strong> ?</div>
+            <div class="mb-content">
+                <p>Are you sure you want to log out?</p>
+                <p>Press No if youwant to continue work. Press Yes to logout current user.</p>
+            </div>
+            <div class="mb-footer">
+                <div class="pull-right">
+                    <a href="pages-login.html" class="btn btn-success btn-lg">Yes</a>
+                    <button class="btn btn-default btn-lg mb-control-close">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="myModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Add News</h3>
+  </div>
+      <form name="addNewsForm" ng-submit="addNews()" class="form-horizontal">
+
+  <div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Title</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="title" required ng-minlength="3" ng-maxlength="100"
+                            ng-model="formData.title" class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="addNewsForm.title.$touched && addNewsForm.title.$error.minlength">Minimum length
+                            for
+                            title is 3</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Content</label>
+    <div class="col-md-6 col-xs-12">
+      <textarea name="content" required ng-minlength="10" ng-maxlength="1000"
+                            ng-model="formData.content" class="form-control" rows="5"></textarea>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="addNewsForm.content.$touched && addNewsForm.content.$error.minlength">Minimum length
+                            for
+                            content is 6</span>
+    </div>
+  </div>
+ 
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Category</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <select ng-model="formData.categoryId"
+                                            ng-options="c.id as c.name for c in categories" class="form-control select"
+                                            >
+                                        </select>
+                                      
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Add</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+  </form>
+
+</script>
+
+<script type="text/ng-template" id="editModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Edit News</h3>
+  </div>
+      <form name="editNewsForm" ng-submit="editNews()" class="form-horizontal">
+
+  <div class="modal-body">
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Title</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="title" required ng-minlength="3" ng-maxlength="100"
+                            ng-model="editData.title" class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="editNewsForm.title.$touched && editNewsForm.title.$error.minlength">Minimum length
+                            for
+                            title is 3</span>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Content</label>
+    <div class="col-md-6 col-xs-12">
+      <textarea name="content" required ng-minlength="10" ng-maxlength="1000"
+                            ng-model="editData.content" class="form-control" rows="5"></textarea>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="editNewsForm.content.$touched && editNewsForm.content.$error.minlength">Minimum length
+                            for
+                            content is 6</span>
+    </div>
+  </div>
+ 
+  <div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">Category</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <select ng-model="editData.categoryId"
+                                            ng-options="c.id as c.name for c in categories" class="form-control select"
+                                            >
+                                        </select>
+                                      
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+  </form>
+
+</script>
+
+<script type="text/ng-template" id="deleteModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Delete News</h3>
+  </div>
+
+  <div class="modal-body">
+    Do you really want to delete this news. This action can't be undo
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="deleteNews()">Yes</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+
+</script>

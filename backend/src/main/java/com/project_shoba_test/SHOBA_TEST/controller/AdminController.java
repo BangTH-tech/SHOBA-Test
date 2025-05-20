@@ -22,6 +22,7 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.AddUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.EditUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.FilterEmployeeListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.CategoryShortResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewDetailResponse;
@@ -46,6 +47,12 @@ public class AdminController {
     private final NewService newService;
 
     private final NewCategoryService newCategoryService;
+
+    @GetMapping("/category-short-response")
+    public ResponseEntity<List<CategoryShortResponse>> getAllCategoryShortResponse() {
+        return ResponseEntity.ok(newCategoryService.getAllCategoryShortResponse());
+    }
+    
 
     @PostMapping("/employee-list")
     public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(

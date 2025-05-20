@@ -246,10 +246,10 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal
                     $uibModalInstance.dismiss('cancel');
                 };
 
-                
+
             },
             resolve: {
-                onLoad: function() {
+                onLoad: function () {
                     return $scope.fetchEmpsByPage;
                 }
             }
@@ -309,13 +309,13 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal
                     $uibModalInstance.dismiss('cancel');
                 };
 
-                
+
             },
             resolve: {
                 editData: function () {
                     return emp;
                 },
-                onLoad: function() {
+                onLoad: function () {
                     return $scope.fetchEmpsByPage;
                 }
             }
@@ -324,3 +324,326 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal
 
 });
 
+app.controller('NewsListCtrl', function ($scope, $http, $location, $uibModal) {
+    $scope.news = [];
+    $scope.categories = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.totalElements = 0;
+    $scope.numberOfElements = 0;
+    $scope.filter = {
+        page: 0,
+        size: 5,
+        sortBy: '',
+        ascending: true,
+        search: '',
+        categoryId: 0
+    }
+
+    $scope.fetchCategories = function () {
+        $http.get('http://localhost:8080/api/v1/admin/category-short-response', {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+
+                $scope.categories.push({
+                    id: 0,
+                    name: 'All Category'
+                })
+                $scope.categories = $scope.categories.concat(response.data);
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+
+    $scope.fetchNewsByPage = function () {
+
+        $scope.newsFilter = angular.copy($scope.filter);
+        if ($scope.newsFilter.categoryId == 0) {
+            $scope.newsFilter.categoryId = null;
+        }
+        $http.post('http://localhost:8080/api/v1/admin/news-list', $scope.newsFilter, {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+                if (response.data != '') {
+                    $scope.news = response.data;
+                    $scope.currentPage = response.data.number + 1;
+                    $scope.totalPages = response.data.totalPages;
+                    $scope.totalElements = response.data.totalElements;
+                    $scope.numberOfElements = response.data.numberOfElements;
+                }
+                else {
+                    $scope.totalElements = 0;
+                    $scope.numberOfElements = 0;
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchCategories();
+    $scope.fetchNewsByPage();
+    $scope.getPageRange = function () {
+        var total = $scope.news.totalPages;
+        var current = $scope.currentPage;
+        var delta = 2;
+        var range = [];
+        var left = current - delta;
+        var right = current + delta;
+
+        for (var i = 1; i <= total; i++) {
+            if (i == 1 || i == total || (i >= left && i <= right)) {
+                range.push(i);
+            }
+        }
+
+        // Thêm dấu "..." khi cần
+        var pagination = [];
+        var last;
+
+        range.forEach(function (i) {
+            if (last) {
+                if (i - last === 2) {
+                    pagination.push(last + 1);
+                } else if (i - last > 2) {
+                    pagination.push('...');
+                }
+            }
+            pagination.push(i);
+            last = i;
+        });
+
+        return pagination;
+    };
+
+    $scope.goToPage = function (page) {
+        if (page === '...') return;
+        console.log(page);
+        $scope.currentPage = page;
+        $scope.filter.page = page - 1;
+        // Gọi API để lấy dữ liệu trang mới nếu cần
+        $scope.fetchNewsByPage();
+    };
+
+    $scope.sortBy = function (column) {
+        if ($scope.filter.sortBy == column) {
+            $scope.filter.ascending = !$scope.filter.ascending;
+        }
+        else {
+            $scope.filter.sortBy = column;
+            $scope.filter.ascending = true;
+        }
+        $scope.fetchNewsByPage();
+    };
+
+    $scope.changeStatus = function (emp) {
+        if (emp.status == 'ACTIVE') {
+            emp.status = 'INACTIVE';
+        }
+        else {
+            emp.status = 'ACTIVE'
+        }
+        $http.put('http://localhost:8080/api/v1/admin/change-status/' + emp.id, {}, {
+            withCredentials: true
+        })
+            .then(function (response) {
+                toastr.success("Change employee status successfully")
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    };
+
+    $scope.editData = {
+        title: '',
+        content: '',
+        categoryId: 1
+    }
+
+    $scope.openModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'myModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, onLoad, categories) {
+                $scope.formData = {
+                    title: '',
+                    content: '',
+                    categoryId: 1
+                }
+                $scope.categories = angular.copy(categories);
+                $scope.categories.shift();
+                $scope.addNews = function () {
+                    $http.post('http://localhost:8080/api/v1/admin/add-news', $scope.formData,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Add news successfully!");
+                            $uibModalInstance.close();
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+                }
+
+
+                $scope.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                onLoad: function () {
+                    return $scope.fetchNewsByPage;
+                },
+                categories: function () {
+                    return $scope.categories;
+                }
+            }
+        });
+    };
+
+
+    $scope.openModalEdit = function (news) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'editModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, editData, onLoad, categories) {
+                $scope.editData = angular.copy(editData);
+                $scope.categories = angular.copy(categories);
+                $scope.categories.shift();
+                $scope.getNewsDetail = function () {
+                    $http.get('http://localhost:8080/api/v1/admin/news-detail/' + news.id,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            $scope.editData = response.data;
+                            console.log(editData);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+                $scope.getNewsDetail();
+                $scope.editNews = function () {
+                    $http.put('http://localhost:8080/api/v1/admin/edit-news', $scope.editData,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Edit news successfully!");
+                            $uibModalInstance.close();
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                editData: function () {
+                    return news;
+                },
+                onLoad: function () {
+                    return $scope.fetchNewsByPage;
+                },
+                categories: function () {
+                    return $scope.categories;
+                }
+            }
+        });
+    };
+
+    $scope.openModalDelete = function (news) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'deleteModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance,  onLoad, filter, currentPage) {
+     
+                $scope.deleteNews = function () {
+                    $http.delete('http://localhost:8080/api/v1/admin/delete-news/' + news.id,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Delete news successfully!");
+                            $uibModalInstance.close();
+                            filter.page = 0;
+                            currentPage = 1;
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                filter: function() {
+                    return $scope.filter;
+                },
+                currentPage: function() {
+                    return $scope.currentPage;
+                },
+                onLoad: function () {
+                    return $scope.fetchNewsByPage;
+                }
+            }
+        });
+    };
+
+});

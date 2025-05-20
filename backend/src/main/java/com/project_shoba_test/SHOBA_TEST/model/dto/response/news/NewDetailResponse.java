@@ -17,6 +17,10 @@ public class NewDetailResponse {
 
     private String title;
 
+    private String content;
+
+    private Long categoryId;
+
     private String categoryName;
 
     private String authorUsername;
