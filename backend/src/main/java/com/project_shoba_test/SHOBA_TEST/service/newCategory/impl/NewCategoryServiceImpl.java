@@ -82,6 +82,7 @@ public class NewCategoryServiceImpl implements NewCategoryService {
         if(newRepository.existsByCategory(newCategory)) {
             throw new BadRequestException("This category belongs to some news. Please delete them first", "This category belongs to some news. Please delete them first");
         }
+        newCategoryRepository.delete(newCategory);
     }
 
     @Override

@@ -647,3 +647,233 @@ app.controller('NewsListCtrl', function ($scope, $http, $location, $uibModal) {
     };
 
 });
+
+app.controller('CategoryListCtrl', function ($scope, $http, $location, $uibModal) {
+    $scope.categories = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.totalElements = 0;
+    $scope.numberOfElements = 0;
+
+    $scope.fetchCategoriesByPage = function () {
+
+        $http.get('http://localhost:8080/api/v1/admin/new-category-list', {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+                if (response.data != '') {
+                    $scope.categories = response.data;
+                    $scope.totalElements = response.data.length;
+                    console.log($scope.categories)
+                }
+                
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchCategoriesByPage();
+    $scope.getPageRange = function () {
+        var total = $scope.categories.totalPages;
+        var current = $scope.currentPage;
+        var delta = 2;
+        var range = [];
+        var left = current - delta;
+        var right = current + delta;
+
+        for (var i = 1; i <= total; i++) {
+            if (i == 1 || i == total || (i >= left && i <= right)) {
+                range.push(i);
+            }
+        }
+
+        // Thêm dấu "..." khi cần
+        var pagination = [];
+        var last;
+
+        range.forEach(function (i) {
+            if (last) {
+                if (i - last === 2) {
+                    pagination.push(last + 1);
+                } else if (i - last > 2) {
+                    pagination.push('...');
+                }
+            }
+            pagination.push(i);
+            last = i;
+        });
+
+        return pagination;
+    };
+
+    $scope.goToPage = function (page) {
+        if (page === '...') return;
+        console.log(page);
+        $scope.currentPage = page;
+        $scope.filter.page = page - 1;
+        // Gọi API để lấy dữ liệu trang mới nếu cần
+        $scope.fetchCategoriesByPage();
+    };
+
+
+    $scope.editData = {
+        name: ''
+    }
+
+    $scope.openModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'myModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, onLoad) {
+                $scope.formData = {
+                    name: ''
+                }
+                $scope.addCategory = function () {
+                    $http.post('http://localhost:8080/api/v1/admin/add-new-category', $scope.formData,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Add category successfully!");
+                            $uibModalInstance.close();
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+                }
+
+
+                $scope.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                onLoad: function () {
+                    return $scope.fetchCategoriesByPage;
+                }
+            }
+        });
+    };
+
+
+    $scope.openModalEdit = function (category) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'editModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance, editData, onLoad) {
+                $scope.editData = angular.copy(editData);
+                $scope.getCategoryDetail = function () {
+                    $http.get('http://localhost:8080/api/v1/admin/new-category-detail/' + category.id,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            $scope.editData = response.data;
+                            console.log(editData);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+                $scope.getCategoryDetail();
+                $scope.editCategory = function () {
+                    $http.put('http://localhost:8080/api/v1/admin/edit-new-category', $scope.editData,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Edit category successfully!");
+                            $uibModalInstance.close();
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                editData: function () {
+                    return category;
+                },
+                onLoad: function () {
+                    return $scope.fetchCategoriesByPage;
+                }
+            }
+        });
+    };
+
+    $scope.openModalDelete = function (category) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'deleteModal.html',
+            windowClass: 'modal-vertical-centered',
+            controller: function ($scope, $uibModalInstance,  onLoad) {
+     
+                $scope.deleteNews = function () {
+                    $http.delete('http://localhost:8080/api/v1/admin/delete-new-category/' + category.id,
+                        {
+                            withCredentials: true
+                        }
+                    )
+                        .then(function (response) {
+                            toastr.success("Delete category successfully!");
+                            $uibModalInstance.close();
+                            onLoad();
+
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+
+                            toastr.error(error.data.message);
+                            $uibModalInstance.close();
+                        });
+
+                }
+
+                $scope.cancel = function () {
+                    console.log("Người dùng hủy");
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            },
+            resolve: {
+                onLoad: function () {
+                    return $scope.fetchCategoriesByPage;
+                }
+            }
+        });
+    };
+
+});
+

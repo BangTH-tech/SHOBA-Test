@@ -38,6 +38,10 @@ app.config(function($routeProvider, $locationProvider) {
           templateUrl: 'partials/news-list.html',
             controller: 'NewsListCtrl'
         })
+        .when('/category-list', {
+          templateUrl: 'partials/category-list.html',
+            controller: 'CategoryListCtrl'
+        })
         .otherwise({
             redirectTo: '/'
         });
