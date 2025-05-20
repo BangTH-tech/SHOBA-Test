@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class LoggingFilter extends OncePerRequestFilter{
+public class LoggingFilter extends OncePerRequestFilter {
 
     private final HttpLogService httpLogService;
 
@@ -42,11 +42,13 @@ public class LoggingFilter extends OncePerRequestFilter{
         LocalDateTime now = LocalDateTime.now();
 
         // Lưu log vào MongoDB
-        HttpLog log = new HttpLog(null, method, url, requestBody, responseBody, status, now);
-        httpLogService.save(log);
+        if (!url.contains("/log-list")) {
+            HttpLog log = new HttpLog(null, method, url, requestBody, responseBody, status, now);
+            httpLogService.save(log);
+        }
 
         // Copy lại response body vào output stream
         wrappedResponse.copyBodyToResponse();
     }
-    
+
 }

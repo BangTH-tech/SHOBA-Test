@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.log.FilterLogListDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.AddNewCategoryDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCategoryDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.AddNewsDto;
@@ -22,6 +23,7 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.AddUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.EditUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.FilterEmployeeListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.log.HttpLogResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.CategoryShortResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
@@ -29,6 +31,7 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewDetailRespon
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeListResponse;
+import com.project_shoba_test.SHOBA_TEST.service.log.HttpLogService;
 import com.project_shoba_test.SHOBA_TEST.service.newCategory.NewCategoryService;
 import com.project_shoba_test.SHOBA_TEST.service.news.NewService;
 import com.project_shoba_test.SHOBA_TEST.service.user.UserService;
@@ -47,6 +50,8 @@ public class AdminController {
     private final NewService newService;
 
     private final NewCategoryService newCategoryService;
+
+    private final HttpLogService httpLogService;
 
     @GetMapping("/category-short-response")
     public ResponseEntity<List<CategoryShortResponse>> getAllCategoryShortResponse() {
@@ -151,4 +156,12 @@ public class AdminController {
         return ResponseEntity.ok(userService.getEmployeeDetailResponse(id));
     }
     
+    @PostMapping("/log-list")
+    public ResponseEntity<Page<HttpLogResponse>> getLogList(@RequestBody @Valid FilterLogListDto filterLogListDto) {
+        Page<HttpLogResponse> logList = httpLogService.getAllLog(filterLogListDto);
+        if (logList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(logList);
+    }
 }

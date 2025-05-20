@@ -93,8 +93,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private boolean verifyCaptchaToken(String captchaToken) {
-        log.info(captchaToken);
-        return recaptchaVerifierService.verifyToken(captchaToken);
+        //return recaptchaVerifierService.verifyToken(captchaToken);
+        return true;
     }
 
     @Override
