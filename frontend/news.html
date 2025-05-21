@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="newsApp" ng-controller="NewsController">
+<head>
+  <meta charset="UTF-8">
+  <title>News Headlines</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+    }
+
+    .news-title {
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .news-card {
+      background: linear-gradient(135deg, #ff6a00, #ee0979);
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #4b0b2e;
+    }
+
+    .header h1 {
+      font-weight: 900;
+      font-size: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div style="background-color: #ff6a00; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <!-- Left: Logo -->
+        <div style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;">
+            Shoba <span style="color: #fffbe7;">Test</span>
+        </div>
+
+        <!-- Right: Icons -->
+        <div style="font-size: 1.4rem;">
+            <span style="margin-right: 20px; cursor: pointer;">📰</span>
+            <span style="cursor: pointer;">🛍️</span>
+        </div>
+    </div>
+    <div class="header">
+      <h1>Tin Tức Nổi Bật</h1>
+      <p>Những tiêu đề hấp dẫn nhất hôm nay</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-4" ng-repeat="news in newsList">
+        <div class="card news-card">
+          <div class="card-body">
+            <div class="news-title">{{ news.title }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AngularJS CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    angular.module('newsApp', []).controller('NewsController', function ($scope) {
+      $scope.newsList = [
+        { title: '🔥 Thị trường chứng khoán tăng mạnh' },
+        { title: '🌧️ Dự báo thời tiết: Mưa giông diện rộng' },
+        { title: '⚽ Việt Nam thắng trận giao hữu quốc tế' },
+        { title: '💼 Thủ tướng công bố chiến lược AI quốc gia' },
+        { title: '🚀 SpaceX phóng vệ tinh mới thành công' },
+        { title: '🎬 Bom tấn Hollywood phá vỡ kỷ lục phòng vé' }
+      ];
+    });
+  </script>
+
+</body>
+</html>

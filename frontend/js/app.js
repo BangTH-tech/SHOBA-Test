@@ -14,7 +14,7 @@ waitForGrecaptchaAndRender('recaptcha-container', '6LeGjD8rAAAAAL-j6zh2KwdnaZHmp
 app.config(function($routeProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
     $routeProvider
-        .when('/', {
+        .when('/home', {
             templateUrl: 'partials/home.html',
             controller: 'HomeCtrl'
         })
@@ -37,6 +37,10 @@ app.config(function($routeProvider, $locationProvider) {
         .when('/news-list', {
           templateUrl: 'partials/news-list.html',
             controller: 'NewsListCtrl'
+        })
+        .when('/detail-news/:id', {
+          templateUrl: 'partials/detail-news.html',
+            controller: 'DetailNewsCtrl'
         })
         .when('/category-list', {
           templateUrl: 'partials/category-list.html',

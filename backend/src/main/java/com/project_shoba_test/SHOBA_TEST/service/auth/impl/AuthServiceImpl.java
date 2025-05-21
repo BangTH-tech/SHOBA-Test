@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.LoginDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.RegisterDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.ProfileDto;
 import com.project_shoba_test.SHOBA_TEST.model.entity.Users;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserRole;
 import com.project_shoba_test.SHOBA_TEST.model.enums.UserStatus;
@@ -20,6 +21,7 @@ import com.project_shoba_test.SHOBA_TEST.service.recaptcha.RecaptchaVerifierServ
 import com.project_shoba_test.SHOBA_TEST.service.token.TokenService;
 import com.project_shoba_test.SHOBA_TEST.utils.PasswordUtil;
 import com.project_shoba_test.SHOBA_TEST.utils.mapper.auth.RegisterMapper;
+import com.project_shoba_test.SHOBA_TEST.utils.mapper.user.ProfileMapper;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -44,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
     private final TokenService tokenService;
 
     private final RecaptchaVerifierService recaptchaVerifierService;
+
+    private final ProfileMapper profileMapper;
 
     @Override
     public void register(RegisterDto registerDto) {
@@ -73,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void login(LoginDto loginDto, HttpServletResponse response) {
+    public ProfileDto login(LoginDto loginDto, HttpServletResponse response) {
         verify(loginDto);
         if(verifyCaptchaToken(loginDto.getRecaptchaToken()) == false) {
             throw new BadRequestException("Captcha verification failed", "Captcha verification failed");
@@ -90,6 +94,7 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = tokenService.generateAccessToken(user.getUsername(), loginDto.isRememberMe());
         tokenService.addTokenToCookie(accessToken, response, loginDto.isRememberMe());
+        return profileMapper.mapTo(user);
     }
 
     private boolean verifyCaptchaToken(String captchaToken) {

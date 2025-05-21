@@ -1,5 +1,7 @@
 package com.project_shoba_test.SHOBA_TEST.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.CategoryShortResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewListResponse;
+import com.project_shoba_test.SHOBA_TEST.service.newCategory.NewCategoryService;
 import com.project_shoba_test.SHOBA_TEST.service.news.NewService;
 
 import jakarta.validation.Valid;
@@ -22,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/news")
 public class NewsController {
     private final NewService newService;
+
+    private final NewCategoryService newCategoryService;
 
     @PostMapping("/news-list")
     public ResponseEntity<Page<NewListResponse>> getNewsList(@RequestBody @Valid FilterNewListDto filterNewListDto) {
@@ -35,5 +41,10 @@ public class NewsController {
     @GetMapping("/news-detail/{newsId}")
     public ResponseEntity<NewDetailResponse> getNewsDetail(@PathVariable Long newsId) {
         return ResponseEntity.ok(newService.getNewDetailResponse(newsId));
+    }
+
+    @GetMapping("/category-short-response")
+    public ResponseEntity<List<CategoryShortResponse>> getAllCategoryShortResponse() {
+        return ResponseEntity.ok(newCategoryService.getAllCategoryShortResponse());
     }
 }

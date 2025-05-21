@@ -1,13 +1,156 @@
-app.controller('HomeCtrl', function ($scope) {
-    $scope.message = "Welcome to the Home Page!";
+app.controller('HomeCtrl', function ($scope, $http, $location) {
+    $scope.news = [];
+    $scope.categories = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.totalElements = 0;
+    $scope.numberOfElements = 0;
+    $scope.filter = {
+        page: 0,
+        size: 6,
+        sortBy: '',
+        ascending: true,
+        search: '',
+        categoryId: 0
+    }
+    $scope.fetchCategories = function () {
+        $http.get('http://localhost:8080/api/v1/news/category-short-response', {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+
+                $scope.categories.push({
+                    id: 0,
+                    name: 'All Category'
+                })
+                $scope.categories = $scope.categories.concat(response.data);
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchNewsByPage = function () {
+
+        $scope.newsFilter = angular.copy($scope.filter);
+        if ($scope.newsFilter.categoryId == 0) {
+            $scope.newsFilter.categoryId = null;
+        }
+        $http.post('http://localhost:8080/api/v1/news/news-list', $scope.newsFilter, {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+                if (response.data != '') {
+                    $scope.news = response.data;
+                    $scope.currentPage = response.data.number + 1;
+                    $scope.totalPages = response.data.totalPages;
+                    $scope.totalElements = response.data.totalElements;
+                    $scope.numberOfElements = response.data.numberOfElements;
+                }
+                else {
+                    $scope.totalElements = 0;
+                    $scope.numberOfElements = 0;
+                }
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchCategories();
+    $scope.fetchNewsByPage();
+    $scope.getPageRange = function () {
+        var total = $scope.news.totalPages;
+        var current = $scope.currentPage;
+        var delta = 2;
+        var range = [];
+        var left = current - delta;
+        var right = current + delta;
+
+        for (var i = 1; i <= total; i++) {
+            if (i == 1 || i == total || (i >= left && i <= right)) {
+                range.push(i);
+            }
+        }
+
+        // Thêm dấu "..." khi cần
+        var pagination = [];
+        var last;
+
+        range.forEach(function (i) {
+            if (last) {
+                if (i - last === 2) {
+                    pagination.push(last + 1);
+                } else if (i - last > 2) {
+                    pagination.push('...');
+                }
+            }
+            pagination.push(i);
+            last = i;
+        });
+
+        return pagination;
+    };
+
+    $scope.goToDetail = function (id) {
+        $location.path('/detail-news/' + id);
+    }
+
+    $scope.goToPage = function (page) {
+        if (page === '...') return;
+        console.log(page);
+        $scope.currentPage = page;
+        $scope.filter.page = page - 1;
+        // Gọi API để lấy dữ liệu trang mới nếu cần
+        $scope.fetchNewsByPage();
+    };
+
+    $scope.sortBy = function (column) {
+        if ($scope.filter.sortBy == column) {
+            $scope.filter.ascending = !$scope.filter.ascending;
+        }
+        else {
+            $scope.filter.sortBy = column;
+            $scope.filter.ascending = true;
+        }
+        $scope.fetchNewsByPage();
+    };
 });
 
-app.controller('UsersCtrl', function ($scope) {
-    $scope.users = [
-        { id: 1, name: "Alice" },
-        { id: 2, name: "Bob" },
-        { id: 3, name: "Charlie" }
-    ];
+app.controller('DetailNewsCtrl', function ($scope, $http, $location, $routeParams) {
+    $scope.news = {};
+    const newsId = $routeParams.id;
+    $scope.fetchNewsDetail = function () {
+        $http.get('http://localhost:8080/api/v1/news/news-detail/' + newsId,
+            {
+                withCredentials: true
+            }
+        )
+            .then(function (response) {
+                console.log(response);
+                $scope.news = response.data;
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchNewsDetail();
+
+    $scope.goToHome = function () {
+        $location.path('/home');
+    }
 });
 
 app.controller('LoginCtrl', function ($scope, $http, $location) {
@@ -33,8 +176,14 @@ app.controller('LoginCtrl', function ($scope, $http, $location) {
             }
         )
             .then(function (response) {
+                console.log(response);
                 $scope.error = false;
-                $location.path('/employee-list');
+                if (response.data.role !== 'GUEST') {
+                    $location.path('/employee-list');
+                }
+                else {
+                    $location.path('/home');
+                }
             })
             .catch(function (error) {
                 toastr.error(error.data.message);
@@ -894,7 +1043,7 @@ app.controller('LogListCtrl', function ($scope, $http, $location, $uibModal) {
         status: '',
         createdBy: ''
     }
-    
+
     $scope.fetchFunctions = function () {
         $http.get('http://localhost:8080/api/v1/admin/get-all-functions', {
             withCredentials: true

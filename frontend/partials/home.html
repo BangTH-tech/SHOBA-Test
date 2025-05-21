@@ -1,1 +1,85 @@
-<h1>Home</h1>
+<div class="container"
+    style="background: linear-gradient(to right, #ffecd2, #fcb69f); font-family: 'Segoe UI', sans-serif; width: 100% !important">
+    <div
+        style="background-color: #ff6a00; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <!-- Left: Logo -->
+        <div
+            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;">
+            Shoba <span style="color: #fffbe7;">Test</span>
+        </div>
+
+        <!-- Right: Icons -->
+        <div style="font-size: 1.4rem;">
+            <span style="margin-right: 20px; cursor: pointer;">📰</span>
+            <span style="cursor: pointer;">🛍️</span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header text-center">
+        <h1>Hot News</h1>
+        <p>You’ll totally regret it if you skip this!</p>
+    </div>
+    <div style="display: flex; flex-direction: column;">
+        <div class="form-group" 
+            style="margin-bottom: 20px; font-size: 14.4px;margin-right: 10px; margin-left: 10px;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="font-weight: bold; margin-top: 10px;">
+                    <span style="color: #4b0b2e;">Can you believe? <span style="color: #ff6a00;">10</span> news are waiting for you to explore</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-right: 10px;">
+                    <div style="margin-right: 10px;">
+                        <label for="categorySelect" style="font-weight: bold; color: #4b0b2e;">Choose Category</label>
+                    </div>
+                    <div>
+                        <select id="categorySelect" ng-model="filter.categoryId"
+                            ng-options="c.id as c.name for c in categories" class="form-control custom-select"
+                            ng-change="fetchNewsByPage()" style="
+              background: linear-gradient(135deg, #ff6a00, #ee0979);
+              cursor: pointer;
+              color: #4b0b2e;;
+              height: 50px;
+              font-weight: bold;
+              border: none;
+              border-radius: 10px;
+              padding: 10px 15px;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              transition: box-shadow 0.3s ease;
+          " onfocus="this.style.boxShadow='0 0 0 3px rgba(255,255,255,0.5)'"
+                            onblur="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-4" ng-repeat="new in news.content">
+                <div class="card news-card" ng-click="goToDetail(new.id)">
+                    <div class="card-body" style="margin-bottom: 20px;">
+                        <div class="news-title">🔥 {{ new.title }}</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; float: right; margin-right: 10px;">
+        <ul class="pagination">
+            <li><a href="" ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">&laquo;</a>
+            </li>
+
+            <li ng-repeat="page in getPageRange() track by $index" ng-class="{active: currentPage == page}">
+                <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
+                <span ng-if="page === '...'">...</span>
+            </li>
+            <li>
+                <a href="" ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- AngularJS CDN -->

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.LoginDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.auth.RegisterDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.ProfileDto;
 import com.project_shoba_test.SHOBA_TEST.service.auth.AuthService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,8 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
-        authService.login(loginDto, response);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ProfileDto> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+        return ResponseEntity.ok(authService.login(loginDto, response));
     }
 }
