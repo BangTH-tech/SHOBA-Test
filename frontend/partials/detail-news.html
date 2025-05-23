@@ -2,17 +2,28 @@
     style="background: linear-gradient(to right, #ffecd2, #fcb69f); font-family: 'Segoe UI', sans-serif; width: 100% !important">
     <div
         style="background-color: #ff6a00; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <!-- Left: Logo -->
-        <div
-            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;">
+        <div ng-click="goToHome()"
+            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;cursor: pointer;">
             Shoba <span style="color: #fffbe7;">Test</span>
         </div>
+        <div style="font-size: 1.4rem;" ng-click="goToHome()">
+            <!-- News icon với border nổi bật -->
+            <span style="
+        margin-right: 20px; 
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 2px solid white; 
+        border-radius: 10px; 
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    ">
+                📰
+            </span>
 
-        <!-- Right: Icons -->
-        <div style="font-size: 1.4rem;">
-            <span style="margin-right: 20px; cursor: pointer;">📰</span>
-            <span style="cursor: pointer;">🛍️</span>
+            <!-- Shop icon bình thường -->
+            <span ng-click="openModal()" style="cursor: pointer;">🛍️</span>
         </div>
+
     </div>
     <div style="margin-top: 10px;">
         <button class="btn btn-default" ng-click="goToHome()"><i class="fa fa-arrow-left"></i> Back to Hot News</button>
@@ -26,4 +37,66 @@
 
 </div>
 
-<!-- AngularJS CDN -->
+<div style="
+  height: auto !important;
+  color: #4b0b2e;
+  text-align: center;
+  background: linear-gradient(to right, #ffecd2, #fcb69f);
+  padding: 30px 15px;
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+">
+    <div style="font-size: 1.2rem; font-weight: bold; color: #ff6a00; margin-bottom: 10px;">
+        Thank you for visiting <span style="color: #4b0b2e;">Shoba Test</span>
+    </div>
+
+    <div>
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Home</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">About</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Contact</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Privacy</a>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">📘</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">📸</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">🐦</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">💼</span>
+    </div>
+
+    <div style="opacity: 0.7;">
+        © 2025 Shoba Test. All rights reserved.
+    </div>
+</div>
+<script type="text/ng-template" id="productModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">View Product Detail</h3>
+  </div>
+        <form name="viewProductForm" ng-submit="viewProductDetail()" class="form-horizontal">
+
+  <div class="modal-body">
+To view the product details, please enter the product ID. You can find this on 1688. For example, in the URL https://detail.1688.com/offer/656451753635.html, the product ID is 656451753635.
+<div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">ID</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="id" required ng-minlength="1" ng-maxlength="100"
+                            ng-model="formData.id"  class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="viewProductForm.id.$touched && viewProductForm.id.$error.minlength">Minimum length
+                            for
+                            ID is 1</span>
+    </div>
+  </div>  
+</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Yes</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+</form>
+</script>

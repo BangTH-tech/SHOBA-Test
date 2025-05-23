@@ -9,14 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class ProductPriceInfo {
-    private String size;
-
-    private Long canBookCount;
-
-    private double price;
-
-    private double discountPrice;
-
-    private String color;
+public class SizeInfo {
+    private String name;
 }

@@ -21,6 +21,7 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.request.newCategory.EditNewCa
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.AddNewsDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.EditNewsDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.news.FilterNewListDto;
+import com.project_shoba_test.SHOBA_TEST.model.dto.request.product.FilterProductDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.AddUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.EditUserDto;
 import com.project_shoba_test.SHOBA_TEST.model.dto.request.user.FilterEmployeeListDto;
@@ -30,11 +31,14 @@ import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCateg
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.newCategory.NewCategoryListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.news.NewListResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.product.ProductDetailResponse;
+import com.project_shoba_test.SHOBA_TEST.model.dto.response.product.ProductListResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeDetailResponse;
 import com.project_shoba_test.SHOBA_TEST.model.dto.response.user.EmployeeListResponse;
 import com.project_shoba_test.SHOBA_TEST.service.log.HttpLogService;
 import com.project_shoba_test.SHOBA_TEST.service.newCategory.NewCategoryService;
 import com.project_shoba_test.SHOBA_TEST.service.news.NewService;
+import com.project_shoba_test.SHOBA_TEST.service.product.ProductService;
 import com.project_shoba_test.SHOBA_TEST.service.user.UserService;
 
 import jakarta.validation.Valid;
@@ -53,6 +57,8 @@ public class AdminController {
     private final NewCategoryService newCategoryService;
 
     private final HttpLogService httpLogService;
+
+    private final ProductService productService;
 
     @GetMapping("/category-short-response")
     public ResponseEntity<List<CategoryShortResponse>> getAllCategoryShortResponse() {
@@ -169,5 +175,10 @@ public class AdminController {
     @GetMapping("/get-all-functions")
     public ResponseEntity<List<FunctionEnum>> getAllFunctions() {
         return ResponseEntity.ok(httpLogService.getAllFunctions());
+    }
+
+    @PostMapping("/product-list")
+    public ResponseEntity<Page<ProductListResponse>> getAllProducts(@RequestBody @Valid FilterProductDto filterProductDto) {
+        return ResponseEntity.ok(productService.getAllProduct(filterProductDto));
     }
 }

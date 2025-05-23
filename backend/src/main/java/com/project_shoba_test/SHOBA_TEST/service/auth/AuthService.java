@@ -10,5 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface AuthService {
     ProfileDto login(LoginDto loginDto, HttpServletResponse response);
     void register(RegisterDto registerDto);
+    void logout(HttpServletResponse response);
     Users getCurrentUser();
 }

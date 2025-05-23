@@ -1,85 +1,122 @@
 <div class="container"
-    style="background: linear-gradient(to right, #ffecd2, #fcb69f); font-family: 'Segoe UI', sans-serif; width: 100% !important">
+    style="background: linear-gradient(to right, #ffecd2, #fcb69f); font-family: 'Segoe UI', sans-serif; width: 100% !important; min-height: 100vh;">
+
+    <!-- Header Bar -->
     <div
         style="background-color: #ff6a00; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <!-- Left: Logo -->
-        <div
-            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;">
+        <div ng-click="goToHome()"
+            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px; cursor: pointer;">
             Shoba <span style="color: #fffbe7;">Test</span>
         </div>
+        <div style="font-size: 1.4rem;" ng-click="goToHome()">
+            <!-- News icon với border nổi bật -->
+            <span style="
+        margin-right: 20px; 
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 2px solid white; 
+        border-radius: 10px; 
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    ">
+                📰
+            </span>
 
-        <!-- Right: Icons -->
-        <div style="font-size: 1.4rem;">
-            <span style="margin-right: 20px; cursor: pointer;">📰</span>
-            <span style="cursor: pointer;">🛍️</span>
+            <!-- Shop icon bình thường -->
+            <span ng-click="openModal()" style="cursor: pointer;">🛍️</span>
         </div>
+
     </div>
 
-    <!-- Header -->
-    <div class="header text-center">
+    <!-- Title -->
+    <div class="header text-center" style="margin-top: 20px;">
         <h1>Hot News</h1>
         <p>You’ll totally regret it if you skip this!</p>
     </div>
-    <div style="display: flex; flex-direction: column;">
-        <div class="form-group" 
-            style="margin-bottom: 20px; font-size: 14.4px;margin-right: 10px; margin-left: 10px;">
-            <div style="display: flex; justify-content: space-between;">
-                <div style="font-weight: bold; margin-top: 10px;">
-                    <span style="color: #4b0b2e;">Can you believe? <span style="color: #ff6a00;">10</span> news are waiting for you to explore</span>
-                </div>
-                <div style="display: flex; align-items: center; margin-right: 10px;">
-                    <div style="margin-right: 10px;">
-                        <label for="categorySelect" style="font-weight: bold; color: #4b0b2e;">Choose Category</label>
-                    </div>
-                    <div>
-                        <select id="categorySelect" ng-model="filter.categoryId"
-                            ng-options="c.id as c.name for c in categories" class="form-control custom-select"
-                            ng-change="fetchNewsByPage()" style="
-              background: linear-gradient(135deg, #ff6a00, #ee0979);
-              cursor: pointer;
-              color: #4b0b2e;;
-              height: 50px;
-              font-weight: bold;
-              border: none;
-              border-radius: 10px;
-              padding: 10px 15px;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-              transition: box-shadow 0.3s ease;
-          " onfocus="this.style.boxShadow='0 0 0 3px rgba(255,255,255,0.5)'"
-                            onblur="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'">
-                        </select>
+
+    <!-- Main Layout -->
+    <div style="display: flex; margin: 20px 10px; ">
+        <!-- Sidebar (Categories) -->
+        <div style="display: flex;  flex-direction: column;">
+            <h4 style="color: #ff6a00; font-weight: bold;">Categories</h4>
+            <ul style="list-style: none; padding-left: 0; margin-top: 5px;">
+                <li ng-repeat="c in categories" ng-click="filter.categoryId = c.id; fetchNewsByPage()"
+                    style="padding: 10px 15px; height: auto !important; cursor: pointer; border-radius: 8px; margin-bottom: 10px; background: linear-gradient(to right, #ffdab9, #fff2e6); font-weight: 500; color: #4b0b2e;"
+                    ng-style="{'font-weight': filter.categoryId === c.id ? 'bold' : 'normal', 'background-color': filter.categoryId === c.id ? '#ffd3aa' : ''}">
+                    {{ c.name }}
+                </li>
+            </ul>
+        </div>
+        <!-- Main Content (News) -->
+        <div style="flex-grow: 1; padding-left: 20px;">
+            <div style="margin-bottom: 20px; margin-left: 10px; font-size: 14px; color: #4b0b2e;">
+                <span style="font-weight: bold;">Can you believe? </span>
+                <span><span style="color: #ff6a00;">{{ news.content.length }}</span> news are waiting for you to
+                    explore</span>Hot News
+                    You’ll totally regret it if you skip this!
+                    
+                    Categories
+                    All Category
+                    New Product
+                    
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-4" ng-repeat="new in news.content">
+                    <div class="card news-card" ng-click="goToDetail(new.id)"
+                        style="cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 10px;">
+                        <div class="card-body" style="margin-bottom: 20px;">
+                            <div class="news-title" style="font-weight: bold; font-size: 16px; color: #4b0b2e;">🔥 {{
+                                new.title }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-
-            <div class="col-md-4 mb-4" ng-repeat="new in news.content">
-                <div class="card news-card" ng-click="goToDetail(new.id)">
-                    <div class="card-body" style="margin-bottom: 20px;">
-                        <div class="news-title">🔥 {{ new.title }}</div>
-
-                    </div>
-                </div>
+            <!-- Pagination -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 20px;margin-left: 10px;">
+                <ul class="pagination">
+                    <li><a href="" ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">&laquo;</a></li>
+                    <li ng-repeat="page in getPageRange() track by $index" ng-class="{active: currentPage == page}">
+                        <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
+                        <span ng-if="page === '...'">...</span>
+                    </li>
+                    <li><a href=""
+                            ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">&raquo;</a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </div>
-    <div style="display: flex; float: right; margin-right: 10px;">
-        <ul class="pagination">
-            <li><a href="" ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">&laquo;</a>
-            </li>
-
-            <li ng-repeat="page in getPageRange() track by $index" ng-class="{active: currentPage == page}">
-                <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
-                <span ng-if="page === '...'">...</span>
-            </li>
-            <li>
-                <a href="" ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">&raquo;</a>
-            </li>
-        </ul>
     </div>
 
 </div>
 
-<!-- AngularJS CDN -->
+<script type="text/ng-template" id="productModal.html">
+  <div class="modal-header">
+    <h3 class="modal-title">View Product Detail</h3>
+  </div>
+        <form name="viewProductForm" ng-submit="viewProductDetail()" class="form-horizontal">
+
+  <div class="modal-body">
+To view the product details, please enter the product ID. You can find this on 1688. For example, in the URL https://detail.1688.com/offer/656451753635.html, the product ID is 656451753635.
+<div class="form-group row">
+    <label class="col-md-3 col-xs-12 control-label">ID</label>
+    <div class="col-md-6 col-xs-12">
+      <div class="input-group">
+        <span class="input-group-addon"><span class="fa fa-pencil"></span></span>
+        <input type="text" name="id" required ng-minlength="1" ng-maxlength="100"
+                            ng-model="formData.id"  class="form-control" />
+      </div>
+      <span style="color: #f21111; font-weight: bold; margin-top: 5px"
+                            ng-show="viewProductForm.id.$touched && viewProductForm.id.$error.minlength">Minimum length
+                            for
+                            ID is 1</span>
+    </div>
+  </div>  
+</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit">Yes</button>
+    <button class="btn btn-secondary" ng-click="cancel()">Cancel</button>
+  </div>
+</form>
+</script>

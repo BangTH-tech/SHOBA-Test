@@ -32,4 +32,10 @@ public class AuthController {
     public ResponseEntity<ProfileDto> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
         return ResponseEntity.ok(authService.login(loginDto, response));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        authService.logout(response);
+        return ResponseEntity.noContent().build();
+    }
 }

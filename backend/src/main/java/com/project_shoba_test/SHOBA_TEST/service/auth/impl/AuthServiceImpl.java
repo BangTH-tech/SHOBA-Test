@@ -121,4 +121,15 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
+
+    @Override
+    public void logout(HttpServletResponse response) {
+        Users user = getCurrentUser();
+        if (user != null) {
+            tokenService.deleteCookieFromResponse(response);
+            SecurityContextHolder.clearContext();
+        } else {
+            throw new UnauthorizedException("User not logged in", "User not logged in");
+        }
+    }
 }

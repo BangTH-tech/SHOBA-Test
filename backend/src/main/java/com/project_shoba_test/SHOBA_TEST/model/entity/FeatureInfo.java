@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class FeatureInfo {
-    private String featureName;
+    private String name;
 
-    private String[] featureValue;
+    private String value;
 
 }

@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
         Users user = addUserMapper.mapFrom(addUserDto);
         String randomPassword = PasswordUtil.generateRandomPassword();
+        log.info(randomPassword);
         user.setPassword(PasswordUtil.encodePassword(randomPassword));
         user.setStatus(UserStatus.ACTIVE);
         userRepository.save(user);

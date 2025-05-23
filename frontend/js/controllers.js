@@ -1,4 +1,113 @@
-app.controller('HomeCtrl', function ($scope, $http, $location) {
+
+
+app.controller('DetailProductCtrl', function ($scope, $http, $location, $routeParams) {
+    $scope.carouselIndex = 0;
+    const productId = $routeParams.id;
+    $scope.images = [
+        "https://cbu01.alicdn.com/img/ibank/O1CN01jJJzy31YOwyElliiA_!!2218161903050-0-cib.jpg",
+        "https://cbu01.alicdn.com/img/ibank/O1CN01GGXsRc1YOwyKC3l6g_!!2218161903050-0-cib.jpg",
+        "https://cbu01.alicdn.com/img/ibank/O1CN01LoCozQ1YOwyI064xT_!!2218161903050-0-cib.jpg",
+        "https://cbu01.alicdn.com/img/ibank/O1CN01JAfWz31YOwyJMG2dU_!!2218161903050-0-cib.jpg",
+        "https://cbu01.alicdn.com/img/ibank/O1CN011uGb2y1YOwyGWTLr6_!!2218161903050-0-cib.jpg",
+        "https://cbu01.alicdn.com/img/ibank/O1CN01UEVyfj1YOwyJZSosx_!!2218161903050-0-cib.jpg"
+    ];
+
+
+    $scope.selectedImage = '';
+    $scope.selectedTab = 'attributes';
+    $scope.product = {};
+    $scope.showAllSpecs = false;
+    $scope.showAllModels = false;
+    $scope.selectImage = function (image) {
+        $scope.selectedImage = image;
+    }
+
+    $scope.isLoading = true; // Bắt đầu loading
+
+    $scope.fetchProducts = function () {
+        $scope.isLoading = true;
+
+        $http.get('http://localhost:8080/api/v1/products/detail?link=https://m.1688.com/offer/' + productId + '.html', {
+            withCredentials: true
+        })
+            .then(function (response) {
+                $scope.product = response.data;
+                $scope.updateFeatureDisplay();
+
+                if ($scope.product.priceInfos.length == 2) {
+                    var oneRange = true;
+                    var amountBefore = $scope.product.priceInfos[0].beginAmount;
+                    for (var i = 0; i < $scope.product.priceInfos.length; i++) {
+                        if ($scope.product.priceInfos[i].beginAmount != amountBefore) {
+                            oneRange = false;
+                            break;
+                        }
+                    }
+                    if (oneRange) {
+                        var newPrice = $scope.product.priceInfos[0].price + ' - ' + $scope.product.priceInfos[1].price;
+                        $scope.product.priceInfos = [{
+                            price: newPrice,
+                            beginAmount: amountBefore
+                        }];
+                    }
+                }
+
+                $scope.selectedImage = $scope.product.imageUrls[0];
+            })
+            .catch(function (error) {
+                console.error("Error loading data:", error);
+                if (error.status === 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+                if (error.status === 404) {
+                    toastr.error("Not found");
+                    $location.path('/404');
+                }
+            })
+            .finally(function () {
+                $scope.isLoading = false; // Kết thúc loading dù thành công hay thất bại
+            });
+    };
+
+    $scope.fetchProducts();
+
+    $scope.updateFeatureDisplay = function () {
+        const allSpecs = $scope.product.featureInfos || [];
+        const mid = Math.ceil(allSpecs.length / 2);
+
+        if ($scope.showAllSpecs) {
+            $scope.leftSpecs = allSpecs.slice(0, mid);
+            $scope.rightSpecs = allSpecs.slice(mid);
+        } else {
+            $scope.leftSpecs = allSpecs.slice(0, mid).slice(0, 3);
+            $scope.rightSpecs = allSpecs.slice(mid).slice(0, 3);
+        }
+    };
+
+    // Gọi hàm ban đầu
+
+    // Toggle hiển thị
+    $scope.toggleShowAll = function () {
+        $scope.showAllSpecs = !$scope.showAllSpecs;
+        $scope.updateFeatureDisplay(); // cập nhật lại
+    };
+    $scope.goToHome = function () {
+        $location.path('/home');
+    }
+
+    // function chunkArray(arr, size) {
+    //     var newArr = [];
+    //     for (var i = 0; i < arr.length; i += size) {
+    //         newArr.push(arr.slice(i, i + size));
+    //     }
+    //     return newArr;
+    // }
+
+
+});
+
+app.controller('HomeCtrl', function ($scope, $http, $location, $uibModal) {
     $scope.news = [];
     $scope.categories = [];
     $scope.currentPage = 0;
@@ -13,6 +122,29 @@ app.controller('HomeCtrl', function ($scope, $http, $location) {
         search: '',
         categoryId: 0
     }
+    $scope.formData = {
+        id: 0
+    }
+    $scope.openModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'productModal.html',
+            windowClass: 'modal-vertical-centered',
+
+            controller: function ($scope, $uibModalInstance, $location) {
+
+                $scope.viewProductDetail = function () {
+                    $location.path('/detail-product/' + $scope.formData.id);
+                    $uibModalInstance.dismiss('cancel');
+                }
+
+                $scope.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            }
+        });
+    };
     $scope.fetchCategories = function () {
         $http.get('http://localhost:8080/api/v1/news/category-short-response', {
             withCredentials: true
@@ -123,11 +255,38 @@ app.controller('HomeCtrl', function ($scope, $http, $location) {
         }
         $scope.fetchNewsByPage();
     };
+    $scope.goToHome = function () {
+        $location.path('/home');
+    }
 });
 
 app.controller('DetailNewsCtrl', function ($scope, $http, $location, $routeParams) {
     $scope.news = {};
     const newsId = $routeParams.id;
+    $scope.formData = {
+        id: 0
+    }
+    $scope.openModal = function () {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'productModal.html',
+            windowClass: 'modal-vertical-centered',
+
+            controller: function ($scope, $uibModalInstance, $location) {
+
+                $scope.viewProductDetail = function () {
+                    $uibModalInstance.dismiss('cancel');
+
+                    $location.path('/detail-product/' + $scope.formData.id);
+                }
+
+                $scope.cancel = function () {
+                    $uibModalInstance.dismiss('cancel');
+                };
+
+
+            }
+        });
+    };
     $scope.fetchNewsDetail = function () {
         $http.get('http://localhost:8080/api/v1/news/news-detail/' + newsId,
             {
@@ -271,6 +430,10 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal
                     toastr.error("Session expired! Please login again");
                     $location.path('/login');
                 }
+                if (error.status == 403) {
+                    toastr.error("Forbidden");
+                    $location.path('/403');
+                }
             });
     }
     $scope.fetchEmpsByPage();
@@ -345,6 +508,10 @@ app.controller('EmployeeListCtrl', function ($scope, $http, $location, $uibModal
                 if (error.status == 401) {
                     toastr.error("Session expired! Please login again");
                     $location.path('/login');
+                }
+                if (error.status == 403) {
+                    toastr.error("Forbidden");
+                    $location.path('/403');
                 }
             });
     };
@@ -1150,13 +1317,7 @@ app.controller('LogListCtrl', function ($scope, $http, $location, $uibModal) {
     };
 
     $scope.sortBy = function (column) {
-        if ($scope.filter.sortBy == column) {
-            $scope.filter.ascending = !$scope.filter.ascending;
-        }
-        else {
-            $scope.filter.sortBy = column;
-            $scope.filter.ascending = true;
-        }
+        $scope.filter.ascending = !$scope.filter.ascending;
         $scope.fetchLogsByPage();
     };
 
@@ -1193,4 +1354,103 @@ app.controller('LogListCtrl', function ($scope, $http, $location, $uibModal) {
     };
 
 
+});
+
+app.controller('ProductListCtrl', function ($scope, $http, $location) {
+    $scope.products = [];
+    $scope.currentPage = 0;
+    $scope.totalPages = 0;
+    $scope.totalElements = 0;
+    $scope.numberOfElements = 0;
+    $scope.filter = {
+        page: 0,
+        size: 5
+    }
+
+    $scope.goToDetail = function (id) {
+        console.log(id);
+        $location.path("/detail-product/" + id);
+
+    }
+
+    $scope.fetchProductsByPage = function () {
+
+        $http.post('http://localhost:8080/api/v1/admin/product-list', $scope.filter, {
+            withCredentials: true
+        })
+            .then(function (response) {
+                console.log(response)
+                if (response.data != '') {
+                    $scope.products = response.data;
+                    $scope.currentPage = response.data.number + 1;
+                    $scope.totalPages = response.data.totalPages;
+                    $scope.totalElements = response.data.totalElements;
+                    $scope.numberOfElements = response.data.numberOfElements; console.log($scope.products)
+                }
+
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+                if (error.status == 401) {
+                    toastr.error("Session expired! Please login again");
+                    $location.path('/login');
+                }
+            });
+    }
+    $scope.fetchProductsByPage();
+    $scope.getPageRange = function () {
+        var total = $scope.products.totalPages;
+        var current = $scope.currentPage;
+        var delta = 2;
+        var range = [];
+        var left = current - delta;
+        var right = current + delta;
+
+        for (var i = 1; i <= total; i++) {
+            if (i == 1 || i == total || (i >= left && i <= right)) {
+                range.push(i);
+            }
+        }
+
+        // Thêm dấu "..." khi cần
+        var pagination = [];
+        var last;
+
+        range.forEach(function (i) {
+            if (last) {
+                if (i - last === 2) {
+                    pagination.push(last + 1);
+                } else if (i - last > 2) {
+                    pagination.push('...');
+                }
+            }
+            pagination.push(i);
+            last = i;
+        });
+
+        return pagination;
+    };
+
+    $scope.goToPage = function (page) {
+        if (page === '...') return;
+        console.log(page);
+        $scope.currentPage = page;
+        $scope.filter.page = page - 1;
+        // Gọi API để lấy dữ liệu trang mới nếu cần
+        $scope.fetchProductsByPage();
+    };
+
+
+});
+
+app.controller('404Ctrl', function ($scope, $http, $location, $routeParams) {
+    // Controller logic for 404 page
+});
+
+app.controller('404Ctrl', function ($scope, $http, $location, $routeParams) {
+    // Controller logic for 404 page
+});
+
+app.controller('403Ctrl', function ($scope, $http, $location, $routeParams) {
+    // Controller logic for 403 page
 });

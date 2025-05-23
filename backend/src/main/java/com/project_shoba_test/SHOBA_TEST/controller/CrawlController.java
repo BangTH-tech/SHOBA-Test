@@ -22,7 +22,7 @@ public class CrawlController {
 
     @PostMapping("/product")
     public ResponseEntity<?> crawlProduct(@RequestParam String link) {
-        crawlService.crawlProduct(link);;
+        crawlService.testResponse(link);
         return ResponseEntity.noContent().build();
     }
 }

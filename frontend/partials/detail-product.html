@@ -1,0 +1,384 @@
+<div ng-if="isLoading" style="text-align: center; padding: 40px; display: flex; align-items: center; flex-direction: column;">
+    <div style="font-size: 1.2rem; color: #666;">Loading product details...</div>
+    <div class="spinner" style="margin-top: 20px;">
+        <!-- Spinner đơn giản -->
+        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;"></div>
+    </div>
+</div>
+
+
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<div class="container" ng-if="!isLoading"
+    style="background: linear-gradient(to right, #ffecd2, #fcb69f); font-family: 'Segoe UI', sans-serif; width: 100% !important;  display: flex; flex-direction: column; align-items: center; height: auto !important">
+
+    <div
+        style="background-color: #ff6a00; position: fixed; z-index: 10; margin-right: 15px; padding: 15px 30px; width: 100%; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        <!-- Left: Logo -->
+        <div ng-click="goToHome()"
+            style="font-size: 1.8rem; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); letter-spacing: 1px;cursor: pointer;">
+            Shoba <span style="color: #fffbe7;">Test</span>
+        </div>
+
+        <!-- Right: Icons -->
+        <div style="font-size: 1.4rem;" >
+            <span ng-click="goToHome()" style="margin-right: 20px; cursor: pointer;">📰</span>
+            <span style="
+        cursor: pointer;
+        padding: 5px 10px;
+        border: 2px solid white; 
+        border-radius: 10px; 
+        background-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    ">🛍️</span>
+        </div>
+    </div>
+    <div class="body-wrapper"></div>
+
+    <div class="overlay-container">
+        <div class="item-overlay">
+            <button class="item-overlay__btn">
+                <img src="images/icon-close.svg" alt="close image" class="item-overlay__btn-img" />
+            </button>
+            <div class="item-overlay__mainImg">
+                <img src="images/image-product-1.jpg" alt="" class="item-overlay__img" />
+                <button class="item-overlay__btnlft overlay-btn">
+                    <img src="images/icon-next.svg" alt="next symbol image"
+                        class="item-overlay__btnlft-img overlay-btn__img" />
+                </button>
+                <button class="item-overlay__btnrgt overlay-btn">
+                    <img src="images/icon-next.svg" alt="next symbol image"
+                        class="item-overlay__btnrgt-img overlay-btn__img" />
+                </button>
+            </div>
+            <div class="overlay-img__btns">
+                <button class="overlay-img__btn" data-img="0">
+                    <img src="images/image-product-1-thumbnail.jpg" alt="shoe product image"
+                        class="overlay-img__btn-img" />
+                </button>
+                <button class="overlay-img__btn" data-img="1">
+                    <img src="images/image-product-2-thumbnail.jpg" alt="shoe product image"
+                        class="overlay-img__btn-img" />
+                </button>
+                <button class="overlay-img__btn" data-img="2">
+                    <img src="images/image-product-3-thumbnail.jpg" alt="shoe product image"
+                        class="overlay-img__btn-img" />
+                </button>
+                <button class="overlay-img__btn" data-img="3">
+                    <img src="images/image-product-4-thumbnail.jpg" alt="shoe product image"
+                        class="overlay-img__btn-img" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart -->
+
+
+    <!-- Header -->
+
+
+    <!-- Main item container -->
+    <main class="item" style="margin-top: 25px;">
+
+        <section class="img" style="margin-top: 65px;">
+            <button class="img-main__btnlft img-main__btn">
+                <img src="images/icon-next.svg" alt="next symbol image"
+                    class="img-main__btnlft-img img-main__btn-img" />
+            </button>
+            <button class="img-main__btnrgt img-main__btn">
+                <img src="images/icon-next.svg" alt="next symbol image"
+                    class="img-main__btnrgt-img img-main__btn-img" />
+            </button>
+            <img ng-if="product.imageUrls && product.imageUrls.length" ng-src="{{selectedImage}}"
+                style="width: 100%; max-height: 500px;" alt="" class="img-main" />
+            <div class="img-btns" style="width: 100%;">
+                <button ng-repeat="image in product.imageUrls" ng-click="selectImage(image)" class="img-btn">
+                    <img style="max-width: 110px; max-height: 110px;" ng-src="{{image}}" alt="shoe product image"
+                        class="img-btn__img" />
+                </button>
+            </div>
+            <div style="gap: 16px; margin-bottom: 10px; display: flex;">
+                <div ng-click="selectedTab = 'attributes'" ng-style="{
+            'font-size': selectedTab === 'attributes' ? '22px' : '18px',
+            'font-weight': selectedTab === 'attributes' ? '700' : '500',
+            'padding': '8px 16px',
+            'cursor': 'pointer',
+            'padding-bottom': '10px',
+                        'height': 'auto !important',
+
+            'margin-top': '25px',
+            'color': '#ff6a00',
+            'border-radius': '8px',
+            'background-color': selectedTab === 'attributes' ? '#fff4e6' : '#f0f0f0'
+        }">
+                    Feature Attributes
+                </div>
+
+                <div ng-click="selectedTab = 'weight'" ng-style="{
+            'font-size': selectedTab === 'weight' ? '22px' : '18px',
+            'font-weight': selectedTab === 'weight' ? '700' : '500',
+            'padding': '8px 16px',
+            'height': 'auto !important',
+            'cursor': 'pointer',
+            'margin-bottom': '10px',
+            'margin-top': '25px',
+            'color': '#ff6a00',
+            'border-radius': '8px',
+            'background-color': selectedTab === 'weight' ? '#fff4e6' : '#f0f0f0'
+        }">
+                    Weight
+                </div>
+            </div>
+
+            <div ng-if="selectedTab === 'attributes'" style="height: auto !important;">
+                <div style="gap: 24px; margin-bottom: 10px;">
+
+                    <!-- Cột trái -->
+                    <div style="
+    column-count: 2;
+    column-gap: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 0;
+">
+                        <div ng-repeat="spec in (showAllSpecs ? product.featureInfos : product.featureInfos.slice(0, 6))"
+                            ng-style="{
+      'break-inside': 'avoid',
+      'display': 'flex',
+      'justify-content': 'space-between',
+      'align-items': 'center',
+      'padding': '12px 16px',
+      'background-color': $index % 2 === 0 ? '#fff' : '#fff4e6',
+      'border-bottom': '1px solid #f0f0f0'
+    }">
+                            <div style="font-weight: 500; color: #333; width: 45%;">{{spec.name}}</div>
+                            <div style="color: #555; width: 50%; text-align: right;">{{spec.value}}</div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <!-- Nút Xem thêm -->
+                <div style="text-align: center; margin-top: 16px;">
+                    <button ng-click="toggleShowAll()"
+                        style="padding: 10px 20px; background-color: #ff6a00; color: white; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; margin-bottom: 10px;">
+                        {{ showAllSpecs ? 'View less ▲' : 'View more ▼' }}
+                    </button>
+                </div>
+            </div>
+            <div ng-if="selectedTab === 'weight'" style="margin-top: 16px;">
+                <div
+                    style="background-color: #f9f9f9; padding: 16px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <div style="font-weight: 600; color: #444;">Unit Weight:</div>
+                    <div style="font-size: 16px; color: #222; margin-top: 4px;">{{product.unitWeight}} kg</div>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="price">
+            <h1 class="price-main__heading">{{product.title}}</h1>
+
+            <div class="price-box">
+                <div style="display: flex; justify-content: space-between; font-size: 2.5rem;">
+                    <div class="price-box__main">
+                        <span class="price-box__main-new" style="color: #ff6a00 !important;">{{product.saledCount}}
+                        </span> sold
+                    </div>
+                    <div class="price-box__main">
+                        <span class="price-box__main-new"
+                            style="color: #ff6a00 !important;">{{product.canBookedAmount}}</span> left
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- Giá gốc -->
+
+
+                <!-- Bảng giá theo số lượng -->
+                <div style="max-width: 100%;">
+
+                    <!-- Giá theo số lượng dạng ngang -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <div ng-repeat="tier in product.priceInfos" style="
+        background-color: #f5f5f5;
+        margin-right: 20px;
+        border-radius: 20px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      " onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                            <span class="price-box__main-new"
+                                style="color: #ff6a00; font-weight: bold; margin-right: 12px;">
+                                {{tier.price}}¥
+                            </span>
+                            <span>
+                                {{tier.beginAmount}}+
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div ng-if="product.colorInfos.length" style="height: auto !important;">
+                    <div
+                        style="font-size: 20px; font-weight: bold;margin-top: 25px; margin-bottom: 5px; color: #ff6a00;">
+                        Others
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-start;">
+                        <div ng-repeat="colorInfo in product.colorInfos" ng-if="product.colorInfos" style="
+      width: 120px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    " onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                            <img ng-src="{{colorInfo.imageUrl}}" alt="{{colorInfo.name}}"
+                                style="width: 100%; height: 100px; object-fit: cover;" />
+                            <div style="padding: 8px 6px; font-size: 14px; color: #333;">
+                                {{colorInfo.name}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div ng-if="product.sizeInfos.length" style="height: auto !important;">
+                    <div
+                        style="font-size: 20px; margin-top: 25px; font-weight: bold; margin-bottom: 5px; color: #ff6a00;">
+                        About This Product
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: flex-start;">
+                        <div ng-repeat="sizeInfo in product.sizeInfos" ng-if="product.sizeInfos" style="
+      width: 120px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    " onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+                            <div style="padding: 8px 6px; font-size: 14px; color: #333;">
+                                {{sizeInfo.name}}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div ng-if="product.modelInfos.length" style="margin-top: 30px; width: 100%; max-width: 1000px; font-family: 'Segoe UI', sans-serif; height: auto !important;">
+
+                    <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px; color: #ff6a00;">
+                        Product's Models
+                    </div>
+
+                    <!-- Tabs only show if unitWeight ≠ 0 -->
+
+
+                    <!-- If no unitWeight, skip tabs and show the table -->
+                    <div>
+                        <div style="overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                <thead style="background-color: #fff4e6;">
+                                    <tr>
+                                        <th style="padding: 12px 16px; font-weight: 600; color: #333;">Model Name</th>
+                                        <th style="padding: 12px 16px; font-weight: 600; color: #333;">Amount</th>
+                                        <th style="padding: 12px 16px; font-weight: 600; color: #333;">Weight (kg)</th>
+                                        <th style="padding: 12px 16px; font-weight: 600; color: #333;">Price</th>
+                                        <th style="padding: 12px 16px; font-weight: 600; color: #333;">Discount Price
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in product.modelInfos"
+                                        ng-style="{'background-color': $index % 2 === 0 ? '#fff' : '#fff9f2', 'border-bottom': '1px solid #f0f0f0'}">
+                                        <td style="padding: 12px 16px; color: #444;">{{item.modelName}}</td>
+                                        <td style="padding: 12px 16px; color: #444;">{{item.canBookCount}}</td>
+                                        <td style="padding: 12px 16px; color: #444;">{{item.weight != 0 ? item.weight : '-'}}</td>
+                                        <td style="padding: 12px 16px; color: #e53935; font-weight: 600;">{{item.price
+                                            != 0 ? item.price + '¥' : '-'}}</td>
+                                        <td style="padding: 12px 16px; color: #2e7d32; font-weight: 600;">
+                                            {{item.discountPrice != 0 ? item.discountPrice + '¥' : '-'}}</td>
+                                        <td>
+                                            <button class="price-btn__add price-btn">
+                                                <img src="images/icon-plus.svg" alt="plus sign"
+                                                    class="price-btn__add-img price-btn__img" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+
+                <div class="price-btnbox" style="margin-bottom: 10px;">
+              
+                    <button class="price-cart__btn btn--orange">
+                        <img src="images/icon-cart.svg" alt="cart image" class="price-cart__btn-img" />
+                        Add to cart
+                    </button>
+                </div>
+        </section>
+    </main>
+
+
+</div>
+<div style="
+  height: auto !important;
+  color: #4b0b2e;
+  text-align: center;
+  background: linear-gradient(to right, #ffecd2, #fcb69f);
+  padding: 30px 15px;
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+">
+    <div style="font-size: 1.2rem; font-weight: bold; color: #ff6a00; margin-bottom: 10px;">
+        Thank you for visiting <span style="color: #4b0b2e;">Shoba Test</span>
+    </div>
+
+    <div>
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Home</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">About</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Contact</a>
+        |
+        <a href="#" style="margin: 0 12px; color: #4b0b2e; text-decoration: none; font-weight: 500;">Privacy</a>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">📘</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">📸</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">🐦</span>
+        <span style="font-size: 18px; margin: 0 8px; cursor: pointer;">💼</span>
+    </div>
+
+    <div style="opacity: 0.7;">
+        © 2025 Shoba Test. All rights reserved.
+    </div>
+</div>

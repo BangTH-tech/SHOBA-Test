@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class ColorInfo {
-    private String colorName;
-
     private String imageUrl;
+
+    private String name;
+
 }

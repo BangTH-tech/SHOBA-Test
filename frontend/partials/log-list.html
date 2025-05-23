@@ -26,6 +26,10 @@
                 <a href="/#/log-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Log
                         List</span></a>
             </li>
+            <li>
+                <a href="/#/product-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Product
+                        List</span></a>
+            </li>
         </ul>
         <!-- END X-NAVIGATION -->
     </div>
@@ -140,25 +144,21 @@
                             <table class="table datatable" ng-if="totalElements > 0">
                                 <thead>
                                     <tr>
-                                        <th width="50" ng-click="sortBy('id')">
-                                            Method <span ng-if="filter.sortBy === 'id'">{{ filter.ascending ? '▲' : '▼'
-                                                }}</span>
+                                        <th width="50" >
+                                            Method 
                                         </th>
-                                        <th ng-click="sortBy('username')">
-                                            Url <span ng-if="filter.sortBy === 'username'">{{ filter.ascending ?
-                                                '▲' : '▼'
-                                                }}</span>
+                                        <th width="250" >
+                                            Url 
                                         </th>
-                                        <th ng-click="sortBy('fullName')">
-                                            Request <span ng-if="filter.sortBy === 'fullName'">{{ filter.ascending ?
-                                                '▲' : '▼'
-                                                }}</span>
+                                        <th width="400">
+                                            Request 
                                         </th>
                                         <th>
                                             Status
                                         </th>
-                                        <th>
-                                            Created At
+                                        <th ng-click="sortBy('createdAt')">
+                                            Created At <span>{{ filter.ascending ? '▲' : '▼'
+                                                }}</span>
                                         </th>
                                         <th>
                                             Created By
@@ -169,9 +169,9 @@
                                 <tbody>
                                     <tr ng-click="openModalDetail(log.responseBody)" ng-repeat="log in logs.content"
                                         style="cursor: pointer;">
-                                        <td>{{ log.method }}</td>
-                                        <td>{{ log.url }}</td>
-                                        <td>{{ log.requestBody }}</td>
+                                        <td width="50">{{ log.method }}</td>
+                                        <td width="250">{{ log.url }}</td>
+                                        <td width="400">{{ log.requestBody }}</td>
                                         <td>{{ log.responseStatus }}</td>
                                         <td>{{ log.createdAt }}</td>
                                         <td>{{ log.createdBy }}</td>

@@ -1,0 +1,167 @@
+<div class="page-container">
+
+    <!-- START PAGE SIDEBAR -->
+    <div class="page-sidebar">
+        <!-- START X-NAVIGATION -->
+        <ul class="x-navigation">
+            <li class="xn-logo">
+                <a href="index.html">SHOBA Test</a>
+                <a href="#" class="x-navigation-control"></a>
+            </li>
+
+            <li class="xn-title">Navigation</li>
+            <li>
+                <a href="/#/employee-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Employee
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/news-list"><span class="fa-solid fa-list"></span> <span class="xn-text">News
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/category-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Category
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/log-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Log
+                        List</span></a>
+            </li>
+            <li>
+                <a href="/#/product-list"><span class="fa-solid fa-list"></span> <span class="xn-text">Product
+                        List</span></a>
+            </li>
+
+        </ul>
+        <!-- END X-NAVIGATION -->
+    </div>
+    <!-- END PAGE SIDEBAR -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+        <!-- START X-NAVIGATION VERTICAL -->
+        <ul class="x-navigation x-navigation-horizontal x-navigation-panel">
+            <!-- TOGGLE NAVIGATION -->
+            <li class="xn-icon-button">
+                <a href="#" class="x-navigation-minimize"><span class="fa fa-dedent"></span></a>
+            </li>
+            <!-- END TOGGLE NAVIGATION -->
+            <!-- SEARCH -->
+
+            <!-- END SEARCH -->
+            <!-- SIGN OUT -->
+            <li class="xn-icon-button pull-right">
+                <a href="#" class="mb-control" data-box="#mb-signout"><span class="fa fa-sign-out"></span></a>
+            </li>
+
+        </ul>
+        <!-- END X-NAVIGATION VERTICAL -->
+
+        <!-- START BREADCRUMB -->
+
+        <!-- END BREADCRUMB -->
+
+        <!-- PAGE TITLE -->
+
+        <!-- END PAGE TITLE -->
+
+        <!-- PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrap">
+
+
+            <!-- START RESPONSIVE TABLES -->
+            <div class="row">
+                <div class="">
+                    <div class="panel panel-default">
+
+                        <div class="panel-heading" style="display: flex; justify-content: space-between;">
+                            <div>
+                                <h2 class="panel-title" style="font-weight: bold;">Product List</h2>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <div style="display: flex; justify-content: space-between;margin-bottom: 10px;">
+                                <div style=" font-size: small;">
+                                    Showing {{products.totalElements}} entries
+                                </div>
+                                
+                            </div>
+                            <div ng-if="products.totalElements == 0" class="no-results">
+                                <i class="fa fa-search"></i> <!-- Font Awesome icon -->
+                                No results found
+                            </div>
+                            <table class="table datatable" ng-if="products.totalElements > 0">
+                                <thead>
+                                    <tr>
+                                        <th width="50" >
+                                            ID 
+                                        </th>
+                                        <th width = "400">
+                                            Title 
+                                        </th>
+                                     
+                                        <th>
+                                            Amount
+                                        </th>
+                                        <th>
+                                            Sold
+                                        </th>
+                                     
+                                        <th>
+                                            Weight
+                                        </th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr ng-click="goToDetail(product.id)" ng-repeat="product in products.content" style="cursor: pointer;">
+                                        <td>{{ product.id }}</td>
+                                        <td>{{ product.title }}</td>
+                                        <td>{{ product.canBookedAmount }}</td>
+                                        <td>{{ product.saledCount }}</td>
+                                        <td>{{ product.unitWeight }}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <div 
+                                style="margin-top: 10px; display: flex; justify-content: space-between;">
+                                <div style="font-size: small;">
+                                    Showing <span style="font-weight: bold;">{{(currentPage - 1) * 5 + 1}} to
+                                        {{(currentPage - 1) * 5 + numberOfElements}} </span> of <span
+                                        style="font-weight: bold;">{{totalElements}}</span> entries
+                                </div>
+                                <div style="display: flex;">
+                                    <ul class="pagination">
+                                        <li><a href=""
+                                                ng-click="goToPage(currentPage - 1 > 0 ? currentPage - 1 : 1)">Previous</a>
+                                        </li>
+
+                                        <li ng-repeat="page in getPageRange() track by $index"
+                                            ng-class="{active: currentPage == page}">
+                                            <a href="" ng-click="goToPage(page)" ng-if="page !== '...'">{{ page }}</a>
+                                            <span ng-if="page === '...'">...</span>
+                                        </li>
+                                        <li>
+                                            <a href=""
+                                                ng-click="goToPage(currentPage + 1 > totalPages ? totalPages : currentPage + 1)">Next</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- END RESPONSIVE TABLES -->
+
+            <!-- END PAGE CONTENT WRAPPER -->
+        </div>
+    </div>
+    <!-- END PAGE CONTENT -->
+</div>
+<!-- END PAGE CONTAINER -->
+
+<!-- MESSAGE BOX-->
